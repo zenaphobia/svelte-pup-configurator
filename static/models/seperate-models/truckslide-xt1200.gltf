@@ -1,0 +1,762 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.8.19",
+        "version" : "2.0"
+    },
+    "extensionsUsed" : [
+        "KHR_draco_mesh_compression"
+    ],
+    "extensionsRequired" : [
+        "KHR_draco_mesh_compression"
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                7
+            ]
+        },
+        {
+            "name" : "Scene.001"
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "1200-middle-taper",
+            "scale" : [
+                1.6520096063613892,
+                1.6520096063613892,
+                1.6520096063613892
+            ],
+            "translation" : [
+                0.00045064836740493774,
+                1.7617874145507812,
+                1.2041337490081787
+            ]
+        },
+        {
+            "mesh" : 1,
+            "name" : "Curve.007",
+            "rotation" : [
+                6.198882601893274e-06,
+                0,
+                0,
+                1
+            ],
+            "translation" : [
+                0.2508211135864258,
+                -0.0005559921264648438,
+                0.0437161922454834
+            ]
+        },
+        {
+            "mesh" : 2,
+            "name" : "Curve.009",
+            "translation" : [
+                0.2681245803833008,
+                0.00308990478515625,
+                0.04330996796488762
+            ]
+        },
+        {
+            "mesh" : 3,
+            "name" : "Shape_IndexedFaceSet.003",
+            "rotation" : [
+                6.55651138004032e-06,
+                0,
+                0,
+                1
+            ],
+            "scale" : [
+                0.06964127719402313,
+                0.06964127719402313,
+                0.06964127719402313
+            ],
+            "translation" : [
+                0.5887935161590576,
+                -0.0005235671997070312,
+                0.043306559324264526
+            ]
+        },
+        {
+            "children" : [
+                1,
+                2,
+                3
+            ],
+            "mesh" : 4,
+            "name" : "Curve.008",
+            "rotation" : [
+                -6.198883511387976e-06,
+                0,
+                0,
+                1
+            ],
+            "scale" : [
+                5.919032573699951,
+                5.919032573699951,
+                5.919032573699951
+            ],
+            "translation" : [
+                -20.769163131713867,
+                1.76068115234375,
+                0.9431264996528625
+            ]
+        },
+        {
+            "mesh" : 5,
+            "name" : "Shape_IndexedFaceSet.1773",
+            "translation" : [
+                0,
+                -3.814697265625e-06,
+                -3.71223768524942e-06
+            ]
+        },
+        {
+            "mesh" : 6,
+            "name" : "Shape_IndexedFaceSet.1783",
+            "translation" : [
+                0,
+                -3.814697265625e-06,
+                -3.71223768524942e-06
+            ]
+        },
+        {
+            "children" : [
+                0,
+                4,
+                5,
+                6
+            ],
+            "mesh" : 7,
+            "name" : "Truckslide XT1200",
+            "rotation" : [
+                -0.5000001788139343,
+                0.49999985098838806,
+                -0.49999991059303284,
+                -0.5000000596046448
+            ],
+            "scale" : [
+                0.10000000149011612,
+                0.10000000149011612,
+                0.10000000149011612
+            ],
+            "translation" : [
+                -4.619999885559082,
+                -1.7579946517944336,
+                0.00754016637802124
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "alphaMode" : "BLEND",
+            "doubleSided" : true,
+            "name" : "XT2000-middle-taper.001",
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 0
+                },
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.104544997215271
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "Smooth aluminum Actual",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6514892578125,
+                    0.6514892578125,
+                    0.6514892578125,
+                    1
+                ],
+                "roughnessFactor" : 0.125
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "Material.002",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.0854153037071228,
+                    0.0854153037071228,
+                    0.0854153037071228,
+                    1
+                ],
+                "roughnessFactor" : 0.1090909093618393
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "Dark Aux Metal.001",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6538220643997192,
+                    0.6538220643997192,
+                    0.6538220643997192,
+                    1
+                ]
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "XT2000-Truckslide Right.001",
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 1
+                },
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.6000000238418579
+            }
+        },
+        {
+            "doubleSided" : true,
+            "name" : "XT1200 Truckslide Left",
+            "pbrMetallicRoughness" : {
+                "baseColorTexture" : {
+                    "index" : 2
+                },
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.104544997215271
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "1200-middle-taper",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 0,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 3,
+                    "material" : 0,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Curve.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 1,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 7,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Curve.004",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 8,
+                        "NORMAL" : 9,
+                        "TEXCOORD_0" : 10
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 2,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 11,
+                    "material" : 2,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Shape_IndexedFaceSet.008",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 12,
+                        "NORMAL" : 13,
+                        "TEXCOORD_0" : 14
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 3,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 15,
+                    "material" : 3,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Curve.010",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 16,
+                        "NORMAL" : 17,
+                        "TEXCOORD_0" : 18
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 4,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 19,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Shape_IndexedFaceSet.018",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 20,
+                        "NORMAL" : 21,
+                        "TEXCOORD_0" : 22
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 5,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 23,
+                    "material" : 4,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Shape_IndexedFaceSet.028",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 24,
+                        "NORMAL" : 25,
+                        "TEXCOORD_0" : 26
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 6,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 27,
+                    "material" : 5,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "name" : "Shape_IndexedFaceSet.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 28,
+                        "NORMAL" : 29,
+                        "TEXCOORD_0" : 30
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 7,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 31,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        }
+    ],
+    "textures" : [
+        {
+            "sampler" : 0,
+            "source" : 0
+        },
+        {
+            "sampler" : 1,
+            "source" : 1
+        },
+        {
+            "sampler" : 1,
+            "source" : 2
+        }
+    ],
+    "images" : [
+        {
+            "mimeType" : "image/png",
+            "name" : "1200-middle-taper",
+            "uri" : "1200-middle-taper.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "1200-right-side",
+            "uri" : "1200-right-side.png"
+        },
+        {
+            "mimeType" : "image/png",
+            "name" : "1200-left-side",
+            "uri" : "1200-left-side.png"
+        }
+    ],
+    "accessors" : [
+        {
+            "componentType" : 5126,
+            "count" : 24,
+            "max" : [
+                14.53125,
+                0,
+                0.5
+            ],
+            "min" : [
+                -14.53125,
+                -0.009999999776482582,
+                -0.5
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 24,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 36,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 1238,
+            "max" : [
+                0.3577667474746704,
+                0.005938720423728228,
+                0.0866163894534111
+            ],
+            "min" : [
+                -0.323164701461792,
+                -0.0040612793527543545,
+                -0.08742507547140121
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 1238,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 1238,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 2556,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 4,
+            "max" : [
+                0.3404657244682312,
+                0,
+                0.08702073246240616
+            ],
+            "min" : [
+                -0.3404657244682312,
+                0,
+                -0.08702073246240616
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 4,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 6,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 313,
+            "max" : [
+                0.18873631954193115,
+                0.19460250437259674,
+                0.18863524496555328
+            ],
+            "min" : [
+                -9.419781684875488,
+                -0.19448505342006683,
+                -0.18863192200660706
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 313,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 313,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 1044,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 20890,
+            "max" : [
+                0.5677677989006042,
+                0.00538527499884367,
+                0.10961596667766571
+            ],
+            "min" : [
+                -0.021861271932721138,
+                -0.014616107568144798,
+                -0.0185793936252594
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 20890,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 20890,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 42888,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 318,
+            "max" : [
+                24.326000213623047,
+                1.125,
+                -0.36800000071525574
+            ],
+            "min" : [
+                24.305999755859375,
+                -18.875,
+                -4.868000030517578
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 318,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 318,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 372,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 312,
+            "max" : [
+                -24.305999755859375,
+                1.125,
+                -0.36800000071525574
+            ],
+            "min" : [
+                -24.326000213623047,
+                -18.875,
+                -4.868000030517578
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 312,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 312,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 372,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 13149,
+            "max" : [
+                24.45400047302246,
+                1.75,
+                2.131999969482422
+            ],
+            "min" : [
+                -24.45400047302246,
+                -93.50000762939453,
+                -5.000001430511475
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 13149,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 13149,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 18804,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 245,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 6646,
+            "byteOffset" : 248
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 186,
+            "byteOffset" : 6896
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2918,
+            "byteOffset" : 7084
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 96437,
+            "byteOffset" : 10004
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2395,
+            "byteOffset" : 106444
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2362,
+            "byteOffset" : 108840
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 64133,
+            "byteOffset" : 111204
+        }
+    ],
+    "samplers" : [
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987,
+            "wrapS" : 33071,
+            "wrapT" : 33071
+        },
+        {
+            "magFilter" : 9729,
+            "minFilter" : 9987
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 175340,
+            "uri" : "truckslide-xt1200.bin"
+        }
+    ]
+}

@@ -1,0 +1,1059 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.8.19",
+        "version" : "2.0"
+    },
+    "extensionsUsed" : [
+        "KHR_draco_mesh_compression"
+    ],
+    "extensionsRequired" : [
+        "KHR_draco_mesh_compression"
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "extras" : {
+                "qremesher" : {},
+                "atmosphere_settings" : {
+                    "azimuth" : 3.2044243812561035,
+                    "elevation" : 0.9730210304260254,
+                    "enable_binary_sun" : 0,
+                    "sun_disk" : 1,
+                    "sun_lamp" : 1,
+                    "sun_diameter" : 0.009180000051856041,
+                    "sun_temperature" : 5700.0,
+                    "sun_intensity" : 200000.0,
+                    "atmosphere_density" : 1.2000000476837158,
+                    "atmosphere_height" : 8000.0,
+                    "atmosphere_intensity" : 2.0,
+                    "atmosphere_color" : [
+                        0.75,
+                        0.800000011920929,
+                        1.0,
+                        1.0
+                    ],
+                    "atmosphere_inscattering" : [
+                        0.05730000138282776,
+                        0.10010000318288803,
+                        0.19709999859333038,
+                        1.0
+                    ],
+                    "atmosphere_extinction" : [
+                        0.9427000284194946,
+                        0.8999000191688538,
+                        0.8029000163078308,
+                        1.0
+                    ],
+                    "atmosphere_mie" : 2.0,
+                    "atmosphere_mie_dir" : 0.699999988079071,
+                    "night_intensity" : 0.019999999552965164,
+                    "stars_type" : 0,
+                    "stars_path" : "",
+                    "stars_intensity" : 0.019999999552965164,
+                    "stars_gamma" : 0.5,
+                    "ground_albedo" : [
+                        0.25,
+                        0.25,
+                        0.25,
+                        1.0
+                    ],
+                    "ground_offset" : -100.0,
+                    "atmosphere_distance" : 1.0,
+                    "atmosphere_falloff" : 1.0,
+                    "sun_radiance_gamma" : 1.0,
+                    "preset_name" : "earth",
+                    "preset_filename" : "\u00b7_earth.py",
+                    "ground_visible" : 1,
+                    "horizon_offset" : 0.0
+                },
+                "general_settings" : {
+                    "enabled" : 0,
+                    "intensity_multiplier" : 1,
+                    "initialized" : 0,
+                    "material_count" : 2,
+                    "sun_pos_checksum" : 3.3667399883270264,
+                    "silent_update" : 0,
+                    "clouds_type" : 0,
+                    "clouds_location" : [
+                        14.039999961853027,
+                        261.69000244140625,
+                        0.0
+                    ],
+                    "all_props_checksum" : "2.54643535614013671.34564876556396480.0091800000518560415700.0200000.0200000.01.20000004768371588000.02.00.0199999995529651640.750.8000000119209291.01.00.057300001382827760.100100003182888030.197099998593330381.00.94270002841949460.89990001916885380.80290001630783081.02.00.6999999880790710.0199999995529651640.50.250.250.251.0-100.01.01.01.00.22514756023883820.59515732526779172.0-1.01.015.00.40000000596046450.449999988079071040.8000000119209291.05.05.01.014.039999961853027261.690002441406250.00.00.0",
+                    "is_rendering" : 0
+                },
+                "pmc_sceneprops" : {},
+                "bc" : {
+                    "snap" : {
+                        "hit" : 0
+                    }
+                }
+            },
+            "name" : "Scene",
+            "nodes" : [
+                4,
+                6,
+                8
+            ]
+        },
+        {
+            "extras" : {
+                "qremesher" : {},
+                "atmosphere_settings" : {
+                    "azimuth" : 3.2044243812561035,
+                    "elevation" : 0.9730210304260254,
+                    "enable_binary_sun" : 0,
+                    "sun_disk" : 1,
+                    "sun_lamp" : 1,
+                    "sun_diameter" : 0.009180000051856041,
+                    "sun_temperature" : 5700.0,
+                    "sun_intensity" : 200000.0,
+                    "atmosphere_density" : 1.2000000476837158,
+                    "atmosphere_height" : 8000.0,
+                    "atmosphere_intensity" : 2.0,
+                    "atmosphere_color" : [
+                        0.75,
+                        0.800000011920929,
+                        1.0,
+                        1.0
+                    ],
+                    "atmosphere_inscattering" : [
+                        0.05730000138282776,
+                        0.10010000318288803,
+                        0.19709999859333038,
+                        1.0
+                    ],
+                    "atmosphere_extinction" : [
+                        0.9427000284194946,
+                        0.8999000191688538,
+                        0.8029000163078308,
+                        1.0
+                    ],
+                    "atmosphere_mie" : 2.0,
+                    "atmosphere_mie_dir" : 0.699999988079071,
+                    "night_intensity" : 0.019999999552965164,
+                    "stars_type" : 0,
+                    "stars_path" : "",
+                    "stars_intensity" : 0.019999999552965164,
+                    "stars_gamma" : 0.5,
+                    "ground_albedo" : [
+                        0.25,
+                        0.25,
+                        0.25,
+                        1.0
+                    ],
+                    "ground_offset" : -100.0,
+                    "atmosphere_distance" : 1.0,
+                    "atmosphere_falloff" : 1.0,
+                    "sun_radiance_gamma" : 1.0,
+                    "preset_name" : "earth",
+                    "preset_filename" : "\u00b7_earth.py",
+                    "ground_visible" : 1,
+                    "horizon_offset" : 0.0
+                },
+                "general_settings" : {
+                    "enabled" : 0,
+                    "intensity_multiplier" : 1,
+                    "initialized" : 0,
+                    "material_count" : 2,
+                    "sun_pos_checksum" : 3.3667399883270264,
+                    "silent_update" : 0,
+                    "clouds_type" : 0,
+                    "clouds_location" : [
+                        14.039999961853027,
+                        261.69000244140625,
+                        0.0
+                    ],
+                    "all_props_checksum" : "2.54643535614013671.34564876556396480.0091800000518560415700.0200000.0200000.01.20000004768371588000.02.00.0199999995529651640.750.8000000119209291.01.00.057300001382827760.100100003182888030.197099998593330381.00.94270002841949460.89990001916885380.80290001630783081.02.00.6999999880790710.0199999995529651640.50.250.250.251.0-100.01.01.01.00.22514756023883820.59515732526779172.0-1.01.015.00.40000000596046450.449999988079071040.8000000119209291.05.05.01.014.039999961853027261.690002441406250.00.00.0",
+                    "is_rendering" : 0
+                },
+                "pmc_sceneprops" : {}
+            },
+            "name" : "Scene.001",
+            "nodes" : [
+                13
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 0,
+            "name" : "Plane",
+            "rotation" : [
+                -0.5000000596046448,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "scale" : [
+                0.9434585571289062,
+                9.999998092651367,
+                2.72809100151062
+            ],
+            "translation" : [
+                1.2455863952636719,
+                -22.02596664428711,
+                -0.8801255226135254
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 1,
+            "name" : "Plane.002",
+            "rotation" : [
+                -0.5000000596046448,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "scale" : [
+                0.9434585571289062,
+                9.999998092651367,
+                2.72809100151062
+            ],
+            "translation" : [
+                1.2455787658691406,
+                21.689409255981445,
+                -0.8801326155662537
+            ]
+        },
+        {
+            "mesh" : 2,
+            "name" : "Shape_IndexedFaceSet.001",
+            "translation" : [
+                7.62939453125e-06,
+                0,
+                0
+            ]
+        },
+        {
+            "mesh" : 3,
+            "name" : "Shape_IndexedFaceSet.017",
+            "translation" : [
+                7.62939453125e-06,
+                0,
+                0
+            ]
+        },
+        {
+            "children" : [
+                0,
+                1,
+                2,
+                3
+            ],
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 4,
+            "name" : "ladder-rack",
+            "rotation" : [
+                -0.7071068286895752,
+                0,
+                0,
+                -0.7071067094802856
+            ],
+            "scale" : [
+                0.10000002384185791,
+                0.10000002384185791,
+                0.10000002384185791
+            ],
+            "translation" : [
+                -4.952568054199219,
+                0.16672031581401825,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 5,
+            "name" : "Shape_IndexedFaceSet.055",
+            "translation" : [
+                -5.7220458984375e-06,
+                0,
+                0
+            ]
+        },
+        {
+            "children" : [
+                5
+            ],
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 6,
+            "name" : "lowside-tray-2",
+            "rotation" : [
+                0,
+                0.7071067094802856,
+                -0.7071068286895752,
+                -3.0908616110991716e-08
+            ],
+            "scale" : [
+                0.10000002384185791,
+                0.10000002384185791,
+                0.10000002384185791
+            ],
+            "translation" : [
+                -1.7195899486541748,
+                0,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 7,
+            "name" : "Shape_IndexedFaceSet.023"
+        },
+        {
+            "children" : [
+                7
+            ],
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 8,
+            "name" : "lowside-tray-3",
+            "rotation" : [
+                0,
+                0.7071067094802856,
+                -0.7071068286895752,
+                -3.0908616110991716e-08
+            ],
+            "scale" : [
+                0.10000002384185791,
+                0.10000002384185791,
+                0.10000002384185791
+            ],
+            "translation" : [
+                -3.414789915084839,
+                0,
+                0
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 0,
+            "name" : "Plane",
+            "rotation" : [
+                -0.5000000596046448,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "scale" : [
+                0.9434585571289062,
+                9.999998092651367,
+                2.72809100151062
+            ],
+            "translation" : [
+                1.2455863952636719,
+                -22.02596664428711,
+                -0.8801255226135254
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 1,
+            "name" : "Plane.002",
+            "rotation" : [
+                -0.5000000596046448,
+                0.5,
+                0.5,
+                0.5
+            ],
+            "scale" : [
+                0.9434585571289062,
+                9.999998092651367,
+                2.72809100151062
+            ],
+            "translation" : [
+                1.2455787658691406,
+                21.689409255981445,
+                -0.8801326155662537
+            ]
+        },
+        {
+            "mesh" : 2,
+            "name" : "Shape_IndexedFaceSet.001",
+            "translation" : [
+                7.62939453125e-06,
+                0,
+                0
+            ]
+        },
+        {
+            "mesh" : 3,
+            "name" : "Shape_IndexedFaceSet.017",
+            "translation" : [
+                7.62939453125e-06,
+                0,
+                0
+            ]
+        },
+        {
+            "children" : [
+                9,
+                10,
+                11,
+                12
+            ],
+            "extras" : {
+                "hops" : {}
+            },
+            "mesh" : 4,
+            "name" : "ladder-rack",
+            "rotation" : [
+                -0.7071068286895752,
+                0,
+                0,
+                -0.7071067094802856
+            ],
+            "scale" : [
+                0.10000002384185791,
+                0.10000002384185791,
+                0.10000002384185791
+            ],
+            "translation" : [
+                -4.952568054199219,
+                0.16672031581401825,
+                0
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "extras" : {
+                "pmc_matprops" : {},
+                "B2U_Material_Settings" : {}
+            },
+            "name" : "accent color",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.010313114151358604,
+                    0.010313114151358604,
+                    0.010313114151358604,
+                    1
+                ],
+                "roughnessFactor" : 0.18636363744735718
+            }
+        },
+        {
+            "doubleSided" : true,
+            "extras" : {
+                "pmc_matprops" : {},
+                "B2U_Material_Settings" : {}
+            },
+            "name" : "Dark Aux Metal",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6538220643997192,
+                    0.6538220643997192,
+                    0.6538220643997192,
+                    1
+                ],
+                "roughnessFactor" : 0.1931818127632141
+            }
+        },
+        {
+            "doubleSided" : true,
+            "extras" : {
+                "pmc_matprops" : {},
+                "B2U_Material_Settings" : {}
+            },
+            "name" : "Smooth aluminum",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6514892578125,
+                    0.6514892578125,
+                    0.6514892578125,
+                    1
+                ],
+                "roughnessFactor" : 0.125
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Plane.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 0,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 3,
+                    "material" : 0,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Plane.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 1,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 3,
+                    "material" : 0,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 7,
+                        "NORMAL" : 8,
+                        "TEXCOORD_0" : 9
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 2,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 10,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.011",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 11,
+                        "NORMAL" : 12,
+                        "TEXCOORD_0" : 13
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 3,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 14,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.009",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 15,
+                        "NORMAL" : 16,
+                        "TEXCOORD_0" : 17
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 4,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 18,
+                    "material" : 0,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.076",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 19,
+                        "NORMAL" : 20,
+                        "TEXCOORD_0" : 21
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 5,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 22,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.072",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 23,
+                        "NORMAL" : 24,
+                        "TEXCOORD_0" : 25
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 6,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 26,
+                    "material" : 2,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.087",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 27,
+                        "NORMAL" : 28,
+                        "TEXCOORD_0" : 29
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 7,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 30,
+                    "material" : 1,
+                    "mode" : 4
+                }
+            ]
+        },
+        {
+            "extras" : {
+                "hops" : {}
+            },
+            "name" : "Shape_IndexedFaceSet.083",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 31,
+                        "NORMAL" : 32,
+                        "TEXCOORD_0" : 33
+                    },
+                    "extensions" : {
+                        "KHR_draco_mesh_compression" : {
+                            "bufferView" : 8,
+                            "attributes" : {
+                                "POSITION" : 0,
+                                "NORMAL" : 1,
+                                "TEXCOORD_0" : 2
+                            }
+                        }
+                    },
+                    "indices" : 26,
+                    "material" : 2,
+                    "mode" : 4
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "max" : [
+                1,
+                0.2537241578102112,
+                0.8267343640327454
+            ],
+            "min" : [
+                -1.000000238418579,
+                0,
+                -0.7304614782333374
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 276,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "max" : [
+                1,
+                0.2537241578102112,
+                0.8267343640327454
+            ],
+            "min" : [
+                -1.000000238418579,
+                0,
+                -0.7304614782333374
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 184,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 148,
+            "max" : [
+                -1,
+                22.75,
+                0
+            ],
+            "min" : [
+                -1.875,
+                21,
+                -2
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 148,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 148,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 204,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 146,
+            "max" : [
+                -1,
+                -21,
+                0
+            ],
+            "min" : [
+                -1.875,
+                -22.75,
+                -2
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 146,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 146,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 204,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 620,
+            "max" : [
+                3.5565478801727295,
+                29.84969711303711,
+                1.1921069642539805e-07
+            ],
+            "min" : [
+                -3.9213035106658936,
+                -29.83953285217285,
+                -25.280567169189453
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 620,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 620,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 720,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "max" : [
+                -1.3784703016281128,
+                31.315237045288086,
+                -0.04810141399502754
+            ],
+            "min" : [
+                -16.67104721069336,
+                22.299936294555664,
+                -6.10575532913208
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 4128,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "max" : [
+                -1.024999976158142,
+                31.24449920654297,
+                -0.11800000071525574
+            ],
+            "min" : [
+                -17.024999618530273,
+                21.449501037597656,
+                -6.659999847412109
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 8328,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "max" : [
+                -1.3782156705856323,
+                31.315351486206055,
+                -0.04810141399502754
+            ],
+            "min" : [
+                -16.67104721069336,
+                22.299034118652344,
+                -6.1052470207214355
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 716,
+            "type" : "VEC2"
+        },
+        {
+            "componentType" : 5123,
+            "count" : 4128,
+            "type" : "SCALAR"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "max" : [
+                -1.024999976158142,
+                31.24449920654297,
+                -0.11800000071525574
+            ],
+            "min" : [
+                -17.024999618530273,
+                21.449501037597656,
+                -6.659999847412109
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "type" : "VEC3"
+        },
+        {
+            "componentType" : 5126,
+            "count" : 7748,
+            "type" : "VEC2"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 1273,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1273,
+            "byteOffset" : 1276
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1137,
+            "byteOffset" : 2552
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1161,
+            "byteOffset" : 3692
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 4368,
+            "byteOffset" : 4856
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 6823,
+            "byteOffset" : 9224
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 45001,
+            "byteOffset" : 16048
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 6811,
+            "byteOffset" : 61052
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 45001,
+            "byteOffset" : 67864
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 112868,
+            "uri" : "pup-extras.bin"
+        }
+    ]
+}
