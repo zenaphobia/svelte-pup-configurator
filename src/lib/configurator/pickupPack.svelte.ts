@@ -27,7 +27,7 @@ export class PickupPack {
 	additionalGullwingTray: PickupPackOptions['additionalGullwingTray'] = $state(0);
 	additionalLowsideTray: PickupPackOptions['additionalLowsideTray'] = $state(0);
 	finish: PickupPackOptions['finish'] = $state('Black Diamond Plate');
-	truckslide: PickupPackOptions['truckslide'] = $state('XT1200');
+	truckslide: PickupPackOptions['truckslide'] = $state();
 
 	constructor(options?: PickupPackOptions) {
 		if (options?.hatch) {

@@ -137,6 +137,13 @@
 		type: 'multi',
 		buttons: [
 			{
+				active: configurator.clientPUP.truckslide === undefined,
+				text: 'No Truckslide',
+				action: () => {
+					configurator.hideTruckslide();
+				}
+			},
+			{
 				active: configurator.clientPUP.truckslide === 'XT1200',
 				text: 'XT1200',
 				action: () => {

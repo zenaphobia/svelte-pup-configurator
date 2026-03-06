@@ -139,7 +139,7 @@ void main()
 	private gPlane?: Mesh;
 	private shadowMaterial?: InstanceType<typeof SoftShadowMaterial>;
 	private shadowCount = 0;
-	private gui = new GUI({ title: 'Debugger' });
+	// private gui = new GUI({ title: 'Debugger' });
 	private lightPointerMesh: Mesh;
 
 	// Shadow configuration
@@ -742,7 +742,8 @@ void main()
 			this.gLights?.add(dirLight);
 		}
 
-		this.addPlmGui(this.gui);
+		// shadow debugger GUI
+		// this.addPlmGui(this.gui);
 	}
 
 	private temporalUpdate() {
@@ -1036,6 +1037,7 @@ void main()
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 
 		this.controls.enabled = false;
 
@@ -1066,6 +1068,7 @@ void main()
 
 	hatchSelect() {
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 
 		//close other compartments
 		this.closeAllCompartments();
@@ -1115,6 +1118,7 @@ void main()
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 
 		this.controls!.enabled = false;
 
@@ -1138,6 +1142,7 @@ void main()
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 
 		this.controls.enabled = false;
 
@@ -1163,6 +1168,7 @@ void main()
 		this.closeLowSideLid();
 		this.resetGlobalLight();
 		this.presentTruckslide();
+		this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
@@ -1198,6 +1204,7 @@ void main()
 	ladderRackSelect() {
 		this.closeAllCompartments();
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
@@ -1230,6 +1237,7 @@ void main()
 		//close other compartments
 		this.closeTruckslide();
 		this.resetGlobalLight();
+		this.#killTweenQueue();
 
 		this.controls.enabled = false;
 
@@ -1268,6 +1276,7 @@ void main()
 	additionalLightsSelect() {
 		//close other compartments
 		this.closeTruckslide();
+		this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
@@ -1621,6 +1630,12 @@ void main()
 				this.GullwingModel.getObjectByName('GL-gw-right-lid')!.visible = true;
 				this.GullwingModel.getObjectByName('gw-decimated-left-lid')!.visible = false;
 				this.GullwingModel.getObjectByName('gw-decimated-right-lid')!.visible = false;
+
+				this.assignNewMaterial(this.ShortLowSides, 'GL-left-lid', this.blackMetalMat);
+				this.assignNewMaterial(this.ShortLowSides, 'GL-right-lid', this.blackMetalMat);
+				this.assignNewMaterial(this.GullwingModel, 'GL-gw-left-lid', this.blackMetalMat);
+				this.assignNewMaterial(this.GullwingModel, 'GL-gw-right-lid', this.blackMetalMat);
+
 				if (this.LongFlatHatch.visible) {
 					this.LongFlatHatch.visible = false;
 					if (!this.ShortFlatHatch) {
@@ -1856,6 +1871,7 @@ void main()
 			} else {
 				if (!this.ShortFlatHatch) {
 					this.ShortFlatHatch = await this.fetchModel(modelUrlMap.shortFHdata);
+					this.assignMaterialsToObject(this.ShortFlatHatch);
 					this.scene.add(this.ShortFlatHatch);
 				}
 				this.ShortFlatHatch.visible = true;
@@ -1873,6 +1889,7 @@ void main()
 			} else {
 				if (!this.LongFlatHatch) {
 					this.LongFlatHatch = await this.fetchModel(modelUrlMap.shortFHdata);
+					this.assignMaterialsToObject(this.LongFlatHatch);
 					this.scene.add(this.LongFlatHatch);
 				}
 				this.LongFlatHatch.visible = true;
