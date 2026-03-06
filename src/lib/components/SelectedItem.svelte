@@ -2,6 +2,7 @@
 	import { PupConfigurator } from '$lib/configurator/pup.svelte';
 	import { selectedItemContext } from '$lib/stores.svelte';
 	import { twMerge } from 'tailwind-merge';
+	import TabbedButton from './TabbedButton.svelte';
 
 	type Props = {
 		configurator: PupConfigurator;
@@ -247,15 +248,25 @@
 		}
 	});
 
-	$inspect({ selectedItemContext, selectedActions });
+	let isHidden = $state(false);
 </script>
 
 <aside
 	class={twMerge(
 		'absolute flex flex-col gap-2 -bottom-full left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all bg-gray-200 w-1/2 max-w-[600px]',
-		selectedItemContext.context && 'bottom-4'
+		selectedItemContext.context && 'bottom-4',
+		isHidden && '-bottom-[198px]'
 	)}
 >
+	<div class="absolute left-1/2 -translate-x-1/2 -top-6">
+		<TabbedButton
+			onclick={() => {
+				isHidden = !isHidden;
+			}}
+			active={isHidden}
+			style="fill-gray-200 stroke-gray-200"
+		/>
+	</div>
 	<div class="space-y-1">
 		<p class="font-header text-2xl font-bold">
 			{selectedItemContext.context?.name}
