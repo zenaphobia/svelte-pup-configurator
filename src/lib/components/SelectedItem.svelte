@@ -3,6 +3,7 @@
 	import { selectedItemContext } from '$lib/stores.svelte';
 	import { twMerge } from 'tailwind-merge';
 	import TabbedButton from './TabbedButton.svelte';
+	import type { Snippet } from 'svelte';
 
 	type Props = {
 		configurator: PupConfigurator;
@@ -16,10 +17,15 @@
 		active: boolean;
 	};
 
-	type Actions = {
-		type: 'toggle' | 'multi';
-		buttons: ConfiguratorButton[];
-	};
+	type Actions =
+		| {
+				type: 'toggle' | 'multi';
+				buttons: ConfiguratorButton[];
+		  }
+		| {
+				type: 'custom';
+				renderer: Snippet<[PupConfigurator]>;
+		  };
 
 	let ladderRackActions: Actions = $derived({
 		type: 'toggle',
@@ -215,6 +221,11 @@
 		]
 	});
 
+	let truckColorActions: Actions = $derived({
+		type: 'custom',
+		renderer: ColorPicker
+	});
+
 	let allActions = $derived({
 		'Ladder Rack': {
 			actions: ladderRackActions
@@ -239,6 +250,9 @@
 		},
 		AdditionalTrays: {
 			actions: additionalTraysActions
+		},
+		'Truck Color': {
+			actions: truckColorActions
 		}
 	});
 
@@ -248,7 +262,17 @@
 		}
 	});
 
+	let colorMap: { name: string; style: string }[] = [
+		{ name: 'red', style: 'red-gradient' },
+		{ name: 'blue', style: 'blue-gradient' },
+		{ name: 'gray', style: 'gray-gradient' },
+		{ name: 'white', style: 'white' },
+		{ name: 'black', style: 'black' }
+	];
+
 	let isHidden = $state(false);
+
+	$inspect({ color: configurator.truckColor });
 </script>
 
 <aside
@@ -277,18 +301,102 @@
 	</div>
 
 	{#if selectedActions}
-		{#each selectedActions.actions.buttons as button (button.text)}
-			<button
-				onclick={() => {
-					button.action();
-				}}
-				class={twMerge(
-					'text-app-dark p-2 bg-gray-300 rounded-md transition-all duration-300 ease-in-out hover:rounded-[50px] hover:bg-gray-400',
-					button.active && '!bg-[#e92027] !rounded-[50px] text-white'
-				)}
-			>
-				{button.text}
-			</button>
-		{/each}
+		{#if selectedActions.actions.type === 'multi' || selectedActions.actions.type === 'toggle'}
+			{#each selectedActions.actions.buttons as button (button.text)}
+				<button
+					onclick={() => {
+						button.action();
+					}}
+					class={twMerge(
+						'text-app-dark p-2 bg-gray-300 rounded-md transition-all duration-300 ease-in-out hover:rounded-[50px] hover:bg-gray-400',
+						button.active && '!bg-[#e92027] !rounded-[50px] text-white'
+					)}
+				>
+					{button.text}
+				</button>
+			{/each}
+		{:else if selectedActions.actions.type === 'custom'}
+			{@const renderer = selectedActions.actions.renderer}
+			{@render renderer(configurator)}
+		{/if}
 	{/if}
 </aside>
+
+{#snippet ColorPicker(c: PupConfigurator)}
+	<div class="flex w-full flex-col gap-2 items-center justify-between">
+		{#each colorMap as color}
+			<button
+				class={twMerge(
+					'capitalize transition-colors w-full h-12 rounded-full border-2 border-transparent',
+					color.style,
+					configurator.truckColor === color.name && 'border-red-600'
+				)}
+				onclick={() => {
+					configurator.changeTruckColor(color.name);
+				}}
+			></button>
+		{/each}
+	</div>
+{/snippet}
+
+<style>
+	.red-gradient {
+		background: #cc1414;
+		background: linear-gradient(
+			126deg,
+			rgba(204, 20, 20, 1) 0%,
+			rgba(236, 87, 87, 1) 40%,
+			rgba(255, 128, 128, 1) 50%,
+			rgba(236, 87, 87, 1) 60%,
+			rgba(204, 20, 20, 1) 100%
+		);
+	}
+
+	.blue-gradient {
+		background: #1461cc;
+		background: linear-gradient(
+			126deg,
+			rgba(20, 97, 204, 1) 0%,
+			rgba(68, 122, 199, 1) 40%,
+			rgba(109, 147, 199, 1) 50%,
+			rgba(68, 122, 199, 1) 60%,
+			rgba(20, 97, 204, 1) 100%
+		);
+	}
+
+	.gray-gradient {
+		background: #a6a6a6;
+		background: linear-gradient(
+			126deg,
+			rgba(166, 166, 166, 1) 0%,
+			rgba(184, 184, 184, 1) 40%,
+			rgba(219, 219, 219, 1) 50%,
+			rgba(184, 184, 184, 1) 60%,
+			rgba(166, 166, 166, 1) 100%
+		);
+	}
+
+	.white {
+		background: #dbdbdb;
+		background: linear-gradient(
+			126deg,
+			rgba(219, 219, 219, 1) 0%,
+			rgba(224, 222, 222, 1) 40%,
+			rgba(250, 250, 250, 1) 50%,
+			rgba(224, 222, 222, 1) 60%,
+			rgba(219, 219, 219, 1) 100%
+		);
+	}
+
+	.black {
+		background: #000000;
+		background: linear-gradient(
+			126deg,
+			rgba(0, 0, 0, 1) 0%,
+			rgba(46, 46, 46, 1) 40%,
+			rgba(74, 74, 74, 1) 50%,
+			rgba(46, 46, 46, 1) 60%,
+			rgba(0, 0, 0, 1) 100%
+		);
+	}
+</style>

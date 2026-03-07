@@ -1,12 +1,18 @@
-## HDR
-
-[] Create manual skybox texture, optimize texture and bake in shadows!
-
-- https://www.youtube.com/watch?v=rrZiSwXoBVA&t=165s
-
 ## Functions
 
 [] Change truck paint color
+[] Generate sales PDF
+[] Polish UI (icons, initial loader - Truck driving animation)
+
+- [] Polish UI for mobile
+
+[] Add live summary panel
+[] Offer different rendering options for lower-end devices (low, high)
+
+- [] Shadows (disable for mobile)
+- [] LDR resolution (low resolution default image for mobile)
+- [] Find other ways to optimize performance
+
 [x] Add/Remove additional trays configuration
 [x] Enable lighting configuration
 [x] Add truckslide configuration

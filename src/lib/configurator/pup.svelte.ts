@@ -31,9 +31,6 @@ import {
 	type Object3DEventMap
 } from 'three';
 
-import gsap from 'gsap';
-
-import { ProgressiveLightMap, SoftShadowMaterial } from '@pmndrs/vanilla';
 import {
 	DRACOLoader,
 	FlakesTexture,
@@ -43,9 +40,15 @@ import {
 	OrbitControls,
 	type GLTF
 } from 'three/examples/jsm/Addons.js';
+
+import { ProgressiveLightMap, SoftShadowMaterial } from '@pmndrs/vanilla';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { PickupPack, type Finish } from './pickupPack.svelte.js';
 import { modelUrlMap } from './data.js';
+import gsap from 'gsap';
+import { getInitial3DProfile } from '$lib';
+
+type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
 export class PupConfigurator {
 	// #region custom shaders
@@ -183,8 +186,14 @@ void main()
 
 		return false;
 	});
+	truckColor: TruckColor = $state('gray');
 	private latestControlID: string = '';
 	private queuedAnimations: gsap.core.Tween[] = [];
+	private deviceProfile: ReturnType<typeof getInitial3DProfile> | undefined = undefined;
+
+	get currentDeviceProfile() {
+		return this.deviceProfile;
+	}
 
 	constructor(canvas: HTMLCanvasElement) {
 		this.defaultLoadingManager = DefaultLoadingManager;
@@ -217,8 +226,14 @@ void main()
 			this.standardCameraAngle.y,
 			this.standardCameraAngle.z
 		);
-		this.renderer = new WebGLRenderer({ canvas: this.container, antialias: true, alpha: true });
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer = new WebGLRenderer({
+			canvas: this.container,
+			antialias: true,
+			powerPreference: 'high-performance'
+		});
+
+		this.deviceProfile = getInitial3DProfile(this.renderer.getContext());
+		this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.deviceProfile.maxDpr));
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = ACESFilmicToneMapping;
 		this.renderer.toneMappingExposure = 1; //If you enable sao, turn to 2
@@ -470,7 +485,9 @@ void main()
 		this.dracoLoader.setDecoderPath('./draco/');
 		this.loader.setDRACOLoader(this.dracoLoader);
 
-		this.setupAccumulativeShadows();
+		if (this.deviceProfile.tier === 'high') {
+			this.setupAccumulativeShadows();
+		}
 
 		// #region load default PUP
 		Promise.all([
@@ -1007,6 +1024,36 @@ void main()
 		this.temporalUpdate();
 	}
 
+	changeTruckColor(color: string) {
+		switch (color) {
+			case 'red':
+				this.truckPaintMat.color.set(0x570000);
+				this.truckPaintMat.sheenColor.set(0x2b0000);
+				this.truckColor = 'red';
+				break;
+			case 'blue':
+				this.truckPaintMat.color.set(0x001340);
+				this.truckPaintMat.sheenColor.set(0x000000);
+				this.truckColor = 'blue';
+				break;
+			case 'gray':
+				this.truckPaintMat.color.set(0x1f1f1f);
+				this.truckPaintMat.sheenColor.set(0xffffff);
+				this.truckColor = 'gray';
+				break;
+			case 'black':
+				this.truckPaintMat.color.set(0x050505);
+				this.truckPaintMat.sheenColor.set(0xffffff);
+				this.truckColor = 'black';
+				break;
+			case 'white':
+				this.truckPaintMat.color.set(0xf0f0f0);
+				this.truckPaintMat.sheenColor.set(0xffffff);
+				this.truckColor = 'white';
+				break;
+		}
+	}
+
 	enableOrbitControls() {
 		const id = crypto.randomUUID();
 		this.latestControlID = id;
@@ -1274,7 +1321,7 @@ void main()
 	}
 
 	additionalLightsSelect() {
-		//close other compartments
+		// close other compartments
 		this.closeTruckslide();
 		this.#killTweenQueue();
 		this.controls.enabled = false;
@@ -1781,6 +1828,7 @@ void main()
 			this.LongLowSides.getObjectByName('GL-ls-left-lid')!.visible = false;
 			this.LongLowSides.getObjectByName('GL-ls-right-lid')!.visible = false;
 		}
+
 		switch (this.GetLowSideCounter()) {
 			case 2:
 				this.PupAccessories.getObjectByName('lowside-tray-2')!.position.x = -1.71959;

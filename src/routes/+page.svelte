@@ -20,7 +20,7 @@
 		});
 	});
 
-	$inspect({ progress: configurator?.progress });
+	$inspect({ profile: configurator?.currentDeviceProfile });
 </script>
 
 <svelte:window

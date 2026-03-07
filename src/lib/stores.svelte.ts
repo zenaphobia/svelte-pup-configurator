@@ -87,6 +87,9 @@ export const informationText = {
 	AdditionalTrays: {
 		description:
 			'Each box comes standard with a single removable tray. Add additional trays to keep your small parts and tools organized.'
+	},
+	'Truck Color': {
+		description: 'Change the color of truck'
 	}
 } as const;
 
