@@ -1,6 +1,6 @@
 ## Functions
 
-[] Change truck paint color
+[x] Change truck paint color
 [] Generate sales PDF
 [] Polish UI (icons, initial loader - Truck driving animation)
 

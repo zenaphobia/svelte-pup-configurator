@@ -199,7 +199,6 @@ void main()
 		this.defaultLoadingManager = DefaultLoadingManager;
 		this.defaultLoadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 			this.progress = 100 * (itemsLoaded / itemsTotal);
-			console.log('', url, itemsLoaded, itemsTotal);
 		};
 		this.defaultLoadingManager.onLoad = () => {
 			this.loaded = true;
@@ -422,7 +421,7 @@ void main()
 		this.shadowLight.castShadow = true;
 		this.scene.add(this.shadowLight);
 
-		this.shadowLightHelper = new DirectionalLightHelper(this.shadowLight, 10, 0xff0000);
+		// this.shadowLightHelper = new DirectionalLightHelper(this.shadowLight, 10, 0xff0000);
 		// this.scene.add(this.shadowLightHelper);
 
 		const lp = new SphereGeometry(15, 24, 24);
@@ -437,9 +436,11 @@ void main()
 		this.lightPointerMesh.castShadow = false;
 		this.lightPointerMesh.receiveShadow = false;
 		this.lightPointerMesh.visible = false;
-		this.scene.add(this.lightPointerMesh);
+		// this.scene.add(this.lightPointerMesh);
 
 		const hdrLoader = new HDRLoader();
+
+		const LDRImage = 'hdrs/spruit_sunrise_8k_highest.jpg';
 
 		Promise.all([
 			hdrLoader.loadAsync('hdrs/spruit_sunrise_1k.hdr').then((envMap) => {
@@ -447,7 +448,7 @@ void main()
 				this.scene.environment = envMap;
 			}),
 
-			textureLoader.loadAsync('hdrs/spruit_sunrise_8k_highest.jpg').then((skyboxTexture) => {
+			textureLoader.loadAsync(LDRImage).then((skyboxTexture) => {
 				const skybox = new GroundedSkybox(skyboxTexture, 15, 500, 512);
 				skybox.position.y = 9.1;
 				skybox.rotateY(2.1);
@@ -478,7 +479,9 @@ void main()
 		// this.controls.maxDistance = 50;
 		this.controls.maxAzimuthAngle = 0.5;
 		this.controls.minAzimuthAngle = -3.5;
-		this.controls.rotateSpeed = this.container.offsetWidth / 8000;
+		this.controls.rotateSpeed = this.deviceProfile.probablyMobile
+			? this.container.offsetWidth / 1000
+			: this.container.offsetWidth / 8000;
 
 		// Draco Loader
 		this.dracoLoader = new DRACOLoader();
@@ -491,7 +494,7 @@ void main()
 
 		// #region load default PUP
 		Promise.all([
-			this.loader.loadAsync('./models/seperate-models/truck.gltf'),
+			this.loader.loadAsync('./models/seperate-models/truck_optimized.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/gullwing.gltf'),
 			this.loader.loadAsync('./models/seperate-models/headacheRackHex.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/headacheRackPost.gltf'),
@@ -677,6 +680,9 @@ void main()
 					// This traverses the scene and finds which objects cast shadows
 					this.plm?.clear();
 					this.modelsLoaded = true;
+					console.log(this.renderer.info.render);
+					console.log(this.renderer.info.programs);
+					console.log(this.renderer.info.memory);
 				}
 			)
 			.catch((err) => {
@@ -1016,8 +1022,7 @@ void main()
 
 	animate() {
 		requestAnimationFrame(() => this.animate());
-		if (this.controls && this.camera && this.cameraTracker && this.renderer && this.scene) {
-			this.camera.lookAt(this.cameraTracker.position);
+		if (this.controls && this.camera && this.renderer && this.scene) {
 			this.renderer.render(this.scene, this.camera);
 			this.controls.update();
 		}
