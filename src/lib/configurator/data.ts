@@ -1,8 +1,8 @@
 export const modelUrlMap = {
 	truckData: './models/seperate-models/truck.gltf',
-	gullwingData: './models/seperate-models/gullwing.gltf',
+	gullwingData: './models/seperate-models/gltfpack/gullwing_gltfpack.glb',
 	hrHexData: './models/seperate-models/headacheRackHex.gltf',
-	hrPostData: './models/seperate-models/headacheRackPost.gltf',
+	hrPostData: './models/seperate-models/gltfpack/headacheRackPost_gltfpack.glb',
 	LongLSData: './models/seperate-models/longLowSides.gltf',
 	shortLSData: './models/seperate-models/shortLowSides.gltf',
 	longFHData: './models/seperate-models/longFlatHatch.gltf',
@@ -13,7 +13,7 @@ export const modelUrlMap = {
 	longGladFHData: './models/seperate-models/longGladiatorFlatHatch.gltf',
 	shortGladDHData: './models/seperate-models/shortGladiatorDomedHatch.gltf',
 	longGladDHData: './models/seperate-models/longGladiatorDomedHatch.gltf',
-	PupExtrasData: './models/seperate-models/pup-extras.gltf',
+	PupExtrasData: './models/seperate-models/gltfpack/pup_extras_gltfpack.glb',
 	TSBaseData: './models/seperate-models/truckslide-base.gltf',
 	TSData1200: './models/seperate-models/truckslide-xt1200.gltf',
 	TSData2000: './models/seperate-models/truckslide-xt2000.gltf'

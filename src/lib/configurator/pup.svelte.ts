@@ -513,11 +513,11 @@ void main()
 		Promise.all([
 			this.loader.loadAsync('./models/seperate-models/truck_gltfpack_final.glb'),
 			// this.loader.loadAsync('./models/seperate-models/gullwing.gltf'),
-			this.loader.loadAsync('./models/seperate-models/headacheRackHex.gltf'),
+			this.loader.loadAsync('./models/seperate-models/gltfpack/headacheRackHex_gltfpack.glb'),
 			// this.loader.loadAsync('./models/seperate-models/headacheRackPost.gltf'),
 			this.loader.loadAsync('./models/seperate-models/gltfpack/longLowSides_gltfpack.glb'),
 			// this.loader.loadAsync('./models/seperate-models/shortLowSides.gltf'),
-			this.loader.loadAsync('./models/seperate-models/longFlatHatch.gltf'),
+			this.loader.loadAsync('./models/seperate-models/gltfpack/longFlatHatch_gltfpack.glb'),
 			// this.loader.loadAsync('./models/seperate-models/shortFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/longDomedHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/ShortDomedHatch.gltf'),
@@ -525,7 +525,7 @@ void main()
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/shortGladiatorDomedHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorDomedHatch.gltf'),
-			this.loader.loadAsync('./models/seperate-models/pup-extras.gltf')
+			this.loader.loadAsync('./models/seperate-models/gltfpack/pup_extras_gltfpack.glb')
 			// this.loader.loadAsync('./models/seperate-models/truckslide-base.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt1200.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt2000.gltf')
@@ -637,7 +637,7 @@ void main()
 						child.receiveShadow = true;
 					});
 
-					this.LongLowSides.traverse((obj) => {
+					this.LongFlatHatch.traverse((obj) => {
 						console.log({
 							name: obj.name,
 							type: obj.type,
@@ -668,12 +668,15 @@ void main()
 					// 	this.bdpMaterial;
 					// (this.ShortLowSides.getObjectByName('standard-right-lid') as Mesh).material =
 					// 	this.bdpMaterial;
-					this.LongLowSides.getObjectByName('standard-long-left-lid').children[0].material =
-						this.bdpMaterial;
-					(this.LongLowSides.getObjectByName('standard-long-right-lid') as Mesh).material =
-						this.bdpMaterial;
-					(this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622') as Mesh).material =
-						this.bdpMaterial;
+					// this.LongLowSides.getObjectByName('standard-long-left-lid').children[0].material =
+					// 	this.bdpMaterial;
+					this.assignNewMaterial(this.LongLowSides, 'standard-long-left-lid', this.bdpMaterial);
+					this.assignNewMaterial(this.LongLowSides, 'standard-long-right-lid', this.bdpMaterial);
+					// (this.LongLowSides.getObjectByName('standard-long-right-lid') as Mesh).material =
+					// 	this.bdpMaterial;
+					// (this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622') as Mesh).material =
+					// 	this.bdpMaterial;
+					this.assignNewMaterial(this.LongFlatHatch, 'long_flat_hatch', this.bdpMaterial);
 					// (this.ShortDomedHatch.getObjectByName('Shape_IndexedFaceSet028') as Mesh).material =
 					// 	this.bdpMaterial;
 					// (this.LongDomedHatch.getObjectByName('Shape_IndexedFaceSet012') as Mesh).material =
@@ -718,6 +721,8 @@ void main()
 					this.setupAccumulativeShadows();
 					this.plm?.clear();
 					this.modelsLoaded = true;
+
+					console.log({ fh: this.LongFlatHatch });
 
 					setInterval(() => {
 						console.log(
@@ -2238,7 +2243,7 @@ void main()
 				y: 2 * Math.PI * (-15 / 360),
 				ease: 'expo'
 			});
-			gsap.to(this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622')!.rotation, {
+			gsap.to(this.LongFlatHatch.getObjectByName('long_flat_hatch')!.rotation, {
 				duration: 2,
 				y: 2 * Math.PI * (-10 / 360),
 				ease: 'expo'
@@ -2282,7 +2287,7 @@ void main()
 				ease: 'expo',
 				delay: 0
 			});
-			gsap.to(this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622')!.rotation, {
+			gsap.to(this.LongFlatHatch.getObjectByName('long_flat_hatch')!.rotation, {
 				duration: 2,
 				y: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
@@ -2410,7 +2415,7 @@ void main()
 			});
 		}
 
-		gsap.to(this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622')!.rotation, {
+		gsap.to(this.LongFlatHatch.getObjectByName('long_flat_hatch')!.rotation, {
 			duration: 2,
 			y: 2 * Math.PI * (-10 / 360),
 			ease: 'expo'
@@ -2552,7 +2557,7 @@ void main()
 		}
 
 		// Loads by default
-		gsap.to(this.LongFlatHatch.getObjectByName('Shape_IndexedFaceSet622')!.rotation, {
+		gsap.to(this.LongFlatHatch.getObjectByName('long_flat_hatch')!.rotation, {
 			duration: 2,
 			y: 2 * Math.PI * (0 / 360),
 			ease: 'expo',
@@ -2658,7 +2663,8 @@ void main()
 		if (obj instanceof Mesh) {
 			obj.material = material;
 		} else if (obj instanceof Object3D) {
-			const child = obj.children[0];
+			// might change this to traverse through instead of selecting first child
+			const child = obj.children.find((c) => c instanceof Mesh);
 			if (child && child instanceof Mesh) {
 				child.material = material;
 			} else {
@@ -2677,7 +2683,7 @@ void main()
 		this.assignNewMaterial(this.ShortLowSides, 'standard-right-lid', this.dpMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-left-lid', this.dpMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-right-lid', this.dpMaterial);
-		this.assignNewMaterial(this.LongFlatHatch, 'Shape_IndexedFaceSet622', this.dpMaterial);
+		this.assignNewMaterial(this.LongFlatHatch, 'long_flat_hatch', this.dpMaterial);
 		this.assignNewMaterial(this.ShortDomedHatch, 'Shape_IndexedFaceSet028', this.dpMaterial);
 		this.assignNewMaterial(this.LongDomedHatch, 'Shape_IndexedFaceSet012', this.dpMaterial);
 
@@ -2727,7 +2733,7 @@ void main()
 		this.assignNewMaterial(this.ShortLowSides, 'standard-right-lid', this.bdpMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-left-lid', this.bdpMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-right-lid', this.bdpMaterial);
-		this.assignNewMaterial(this.LongFlatHatch, 'Shape_IndexedFaceSet622', this.bdpMaterial);
+		this.assignNewMaterial(this.LongFlatHatch, 'long_flat_hatch', this.bdpMaterial);
 		this.assignNewMaterial(this.ShortDomedHatch, 'Shape_IndexedFaceSet028', this.bdpMaterial);
 		this.assignNewMaterial(this.LongDomedHatch, 'Shape_IndexedFaceSet012', this.bdpMaterial);
 
@@ -2776,7 +2782,7 @@ void main()
 		this.assignNewMaterial(this.ShortLowSides, 'standard-right-lid', this.leopardMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-left-lid', this.leopardMaterial);
 		this.assignNewMaterial(this.LongLowSides, 'standard-long-right-lid', this.leopardMaterial);
-		this.assignNewMaterial(this.LongFlatHatch, 'Shape_IndexedFaceSet622', this.leopardMaterial);
+		this.assignNewMaterial(this.LongFlatHatch, 'long_flat_hatch', this.leopardMaterial);
 		this.assignNewMaterial(this.ShortDomedHatch, 'Shape_IndexedFaceSet028', this.leopardMaterial);
 		this.assignNewMaterial(this.LongDomedHatch, 'Shape_IndexedFaceSet012', this.leopardMaterial);
 
