@@ -3,6 +3,7 @@
 	import { selectedItemContext } from '$lib/stores.svelte';
 	import { informationText } from '$lib/stores.svelte';
 	import { twMerge } from 'tailwind-merge';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	type Props = {
 		configurator: PupConfigurator;
@@ -50,15 +51,22 @@
 				return undefined;
 		}
 	}
+
+	const large = new MediaQuery('min-width: 1200px');
+
+	$inspect({ large: large.current });
 </script>
 
 <aside
-	class={[
-		'absolute left-8 top-1/2 -translate-y-1/2 block bg-gray-200 text-app-dark rounded-full py-8 px-4 opacity-25 transition-all',
+	class={twMerge(
+		'absolute block bg-gray-200 text-app-dark rounded-full py-8 px-4 opacity-25 transition-all',
+		large.current
+			? 'left-8 top-1/2 -translate-y-1/2'
+			: 'top-4 left-1/2 -translate-x-1/2 max-w-[80%]',
 		configurator.loaded && 'opacity-100'
-	]}
+	)}
 >
-	<div class="flex flex-col gap-4">
+	<div class={['flex gap-4', large.current ? 'flex-col' : 'flex-row overflow-x-auto']}>
 		{#each Object.keys(informationText) as item, i}
 			<button
 				onclick={() => {

@@ -19,12 +19,6 @@
 			}
 		});
 	});
-
-	$inspect({ profile: configurator?.currentDeviceProfile });
-
-	$effect(() => {
-		console.log({ profile: configurator?.currentDeviceProfile });
-	});
 </script>
 
 <svelte:window

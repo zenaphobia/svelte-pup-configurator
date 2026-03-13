@@ -3,6 +3,7 @@ import {
 	BoxGeometry,
 	CanvasTexture,
 	Clock,
+	Color,
 	DefaultLoadingManager,
 	DirectionalLight,
 	DirectionalLightHelper,
@@ -10,6 +11,7 @@ import {
 	Euler,
 	FileLoader,
 	Group,
+	LineSegments,
 	Material,
 	MathUtils,
 	Mesh,
@@ -28,6 +30,7 @@ import {
 	Vector2,
 	Vector3,
 	WebGLRenderer,
+	WireframeGeometry,
 	type Object3DEventMap
 } from 'three';
 
@@ -41,12 +44,15 @@ import {
 	type GLTF
 } from 'three/examples/jsm/Addons.js';
 
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
+import { KTX2Loader } from 'three/examples/jsm/Addons.js';
 import { ProgressiveLightMap, SoftShadowMaterial } from '@pmndrs/vanilla';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { PickupPack, type Finish } from './pickupPack.svelte.js';
 import { modelUrlMap } from './data.js';
 import gsap from 'gsap';
 import { getInitial3DProfile } from '$lib';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
@@ -77,9 +83,10 @@ void main()
 	private renderer: WebGLRenderer;
 	private controls: OrbitControls;
 	private dracoLoader: DRACOLoader;
+	private ktx2Loader: KTX2Loader;
 	private testLight: SpotLight;
 	private shadowLight: DirectionalLight;
-	private shadowLightHelper: DirectionalLightHelper;
+	// private shadowLightHelper: DirectionalLightHelper;
 
 	// #region Truck & PUP Models
 	private allModels: Group<Object3DEventMap> | undefined;
@@ -144,6 +151,7 @@ void main()
 	private shadowCount = 0;
 	// private gui = new GUI({ title: 'Debugger' });
 	private lightPointerMesh: Mesh;
+	private stats = new Stats();
 
 	// Shadow configuration
 	private shadowParams = {
@@ -166,7 +174,7 @@ void main()
 		ambient: 0.01, // Ambient occlusion (reduced for more directional light)
 		bias: 0.001, // Negative bias can help with shadow acne
 		mapSize: 2048, // Higher resolution (increased from 1024)
-		size: 25, // Shadow camera bounds (increased for truck)
+		size: 40, // Shadow camera bounds (increased for truck)
 		near: 0.01, // Shadow camera near
 		far: 1000 // Shadow camera far
 	};
@@ -212,7 +220,10 @@ void main()
 		this.loader = new GLTFLoader();
 		this.fileLoader = new FileLoader();
 		this.scene = new Scene();
+		this.scene.background = new Color('#ededed');
 		this.container = canvas;
+		this.stats.showPanel(0);
+		document.body.appendChild(this.stats.dom);
 
 		if (!this.container) {
 			throw new Error('No container for canvas');
@@ -251,16 +262,19 @@ void main()
 			this.bdpBumpTexture.flipY = false;
 			this.bdpBumpTexture.wrapT = RepeatWrapping;
 			this.bdpBumpTexture.wrapS = RepeatWrapping;
+			this.bdpBumpTexture.repeat.set(2, 2);
 
 			this.dpBumpTexture = dpBumpTexture;
 			this.dpBumpTexture.flipY = false;
 			this.dpBumpTexture.wrapS = RepeatWrapping;
 			this.dpBumpTexture.wrapT = RepeatWrapping;
+			this.dpBumpTexture.repeat.set(2, 2);
 
 			this.BK62BumpTexture = BK62BumpTexture;
 			this.BK62BumpTexture.flipY = false;
 			this.BK62BumpTexture.wrapS = RepeatWrapping;
 			this.BK62BumpTexture.wrapT = RepeatWrapping;
+			this.BK62BumpTexture.repeat.set(2, 2);
 
 			this.emissionMap = emissionMap;
 			this.emissionMap.flipY = false;
@@ -421,6 +435,7 @@ void main()
 		this.shadowLight.castShadow = true;
 		this.scene.add(this.shadowLight);
 
+		// for debug
 		// this.shadowLightHelper = new DirectionalLightHelper(this.shadowLight, 10, 0xff0000);
 		// this.scene.add(this.shadowLightHelper);
 
@@ -440,31 +455,29 @@ void main()
 
 		const hdrLoader = new HDRLoader();
 
-		const LDRImage = 'hdrs/spruit_sunrise_8k_highest.jpg';
+		const LDRImage = 'ldrs/ktx2/spruit_sunrise_2k.ktx2';
 
 		Promise.all([
 			hdrLoader.loadAsync('hdrs/spruit_sunrise_1k.hdr').then((envMap) => {
 				envMap.mapping = EquirectangularReflectionMapping;
 				this.scene.environment = envMap;
-			}),
-
-			textureLoader.loadAsync(LDRImage).then((skyboxTexture) => {
-				const skybox = new GroundedSkybox(skyboxTexture, 15, 500, 512);
-				skybox.position.y = 9.1;
-				skybox.rotateY(2.1);
-				this.scene.add(skybox);
-				skybox.traverse((o) => {
-					if (o instanceof Mesh) {
-						o.castShadow = false;
-						o.receiveShadow = false;
-					}
-				});
 			})
+			// this.ktx2Loader.loadAsync(LDRImage).then((skyboxTexture) => {
+			// 	const skybox = new GroundedSkybox(skyboxTexture, 15, 256, 256);
+			// 	skyboxTexture.flipY = true;
+			// 	skybox.position.y = 9.1;
+			// 	skybox.rotateY(2.1);
+			// 	this.scene.add(skybox);
+			// 	skybox.traverse((o) => {
+			// 		if (o instanceof Mesh) {
+			// 			o.castShadow = false;
+			// 			o.receiveShadow = false;
+			// 		}
+			// 	});
+			// })
 		]).then(() => {
 			this.texturesLoaded = true;
 		});
-
-		// texturePromises.
 
 		const newRot = new Euler(0, 90, 0);
 		this.scene.environmentRotation = newRot;
@@ -476,7 +489,7 @@ void main()
 		this.controls.enablePan = false;
 		this.controls.enableDamping = true;
 		this.controls.maxPolarAngle = 1.6;
-		// this.controls.maxDistance = 50;
+		this.controls.maxDistance = 100;
 		this.controls.maxAzimuthAngle = 0.5;
 		this.controls.minAzimuthAngle = -3.5;
 		this.controls.rotateSpeed = this.deviceProfile.probablyMobile
@@ -487,18 +500,22 @@ void main()
 		this.dracoLoader = new DRACOLoader();
 		this.dracoLoader.setDecoderPath('./draco/');
 		this.loader.setDRACOLoader(this.dracoLoader);
+		this.loader.setMeshoptDecoder(MeshoptDecoder);
 
-		if (this.deviceProfile.tier === 'high') {
-			this.setupAccumulativeShadows();
-		}
+		// ktx2 Loader
+		this.ktx2Loader = new KTX2Loader();
+		this.ktx2Loader.setTranscoderPath('./basis/');
+		this.ktx2Loader.detectSupport(this.renderer);
+
+		this.loader.setKTX2Loader(this.ktx2Loader);
 
 		// #region load default PUP
 		Promise.all([
-			this.loader.loadAsync('./models/seperate-models/truck_optimized.gltf'),
+			this.loader.loadAsync('./models/seperate-models/truck_gltfpack_final.glb'),
 			// this.loader.loadAsync('./models/seperate-models/gullwing.gltf'),
 			this.loader.loadAsync('./models/seperate-models/headacheRackHex.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/headacheRackPost.gltf'),
-			this.loader.loadAsync('./models/seperate-models/longLowSides.gltf'),
+			this.loader.loadAsync('./models/seperate-models/gltfpack/longLowSides_gltfpack.glb'),
 			// this.loader.loadAsync('./models/seperate-models/shortLowSides.gltf'),
 			this.loader.loadAsync('./models/seperate-models/longFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/shortFlatHatch.gltf'),
@@ -582,41 +599,61 @@ void main()
 					//adding hinge points
 					// this.hingePoint = this.ShortLowSides.getObjectByName('lowside-hinge')!;
 
+					// function rotateEach(collection: Object3D[]) {
+					// 	collection.forEach((c, i) => {
+					// 		setTimeout(() => {
+					// 			console.log(`rotating: ${c.name}`);
+					// 			c.rotateZ(0.5);
+					// 		}, i * 5000);
+					// 	});
+					// }
+
+					// let c = this.TruckModel.children[0].children;
+
+					// rotateEach(c);
+
 					//Setup Materials
-					this.TruckModel.traverse((child) => {
-						if (child instanceof Mesh) {
-							if (child.material && child.material.name === 'windowglass.001') {
-								child.material = this.windowMat;
-							}
-							if (child.material && child.material.name === 'redglass.001') {
-								child.material = this.redGlassMat;
-							}
-							if (child.material && child.material.name === 'clearglass.001') {
-								child.material = this.clearGlassMatLights;
-							}
-							if (child.material && child.material.name === 'Carpaint') {
-								child.material = this.truckPaintMat;
-							}
-							child.castShadow = true;
+					this.scene.traverse((child) => {
+						// initial pup material setup
+						if (child.material && child.material.name === 'accent color') {
+							child.material = this.blackMetalMat;
+							child.geometry.name = 'accentColor';
+						} else if (child.material && child.material.name === 'Black Diamond Plate Test 3') {
+							child.material = this.BK62Mat;
+							child.geometry.name = 'lidMaterial';
 						}
+						// truck materials setup
+						else if (child.material && child.material.name === 'windowglass.001') {
+							child.material = this.windowMat;
+						} else if (child.material && child.material.name === 'redglass.001') {
+							child.material = this.redGlassMat;
+						} else if (child.material && child.material.name === 'clearglass.001') {
+							child.material = this.clearGlassMatLights;
+						} else if (child.material && child.material.name === 'Carpaint') {
+							child.material = this.truckPaintMat;
+						}
+
+						child.castShadow = true;
+						child.receiveShadow = true;
 					});
 
-					this.scene.traverse((child) => {
-						if (child instanceof Mesh) {
-							if (child.material && child.material.name === 'accent color') {
-								child.material = this.blackMetalMat;
-								child.geometry.name = 'accentColor';
-							}
-							if (child instanceof Mesh) {
-								child.castShadow = true;
-								// child.receiveShadow = true;
-							}
-							if (child.material && child.material.name === 'Black Diamond Plate Test 3') {
-								child.material = this.BK62Mat;
-								child.geometry.name = 'lidMaterial';
-							}
-						}
+					this.LongLowSides.traverse((obj) => {
+						console.log({
+							name: obj.name,
+							type: obj.type,
+							isMesh: (obj as Mesh).isMesh === true,
+							material: (obj as Mesh).material,
+							obj
+						});
 					});
+
+					const il = this.LongLowSides.getObjectByName('standard-long-left-lid')
+						?.children[0] as Mesh;
+
+					console.log(il.geometry.attributes.uv);
+
+					console.log({ parent: this.LongLowSides.getObjectByName('standard-long-left-lid'), il });
+
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
 					// 	this.bdpMaterial;
 					// (this.GullwingModel.getObjectByName('gw-decimated-left-lid') as Mesh).material =
@@ -631,7 +668,7 @@ void main()
 					// 	this.bdpMaterial;
 					// (this.ShortLowSides.getObjectByName('standard-right-lid') as Mesh).material =
 					// 	this.bdpMaterial;
-					(this.LongLowSides.getObjectByName('standard-long-left-lid') as Mesh).material =
+					this.LongLowSides.getObjectByName('standard-long-left-lid').children[0].material =
 						this.bdpMaterial;
 					(this.LongLowSides.getObjectByName('standard-long-right-lid') as Mesh).material =
 						this.bdpMaterial;
@@ -678,11 +715,17 @@ void main()
 
 					// Clear shadows after all objects are loaded
 					// This traverses the scene and finds which objects cast shadows
+					this.setupAccumulativeShadows();
 					this.plm?.clear();
 					this.modelsLoaded = true;
-					console.log(this.renderer.info.render);
-					console.log(this.renderer.info.programs);
-					console.log(this.renderer.info.memory);
+
+					setInterval(() => {
+						console.log(
+							this.renderer.info.render,
+							this.renderer.info.memory,
+							this.renderer.info.programs
+						);
+					}, 5000);
 				}
 			)
 			.catch((err) => {
@@ -727,12 +770,10 @@ void main()
 		this.gPlane.receiveShadow = true;
 		this.gPlane.position.y = -5.8;
 
+		// For debug
 		// const wireframGeo = new WireframeGeometry(this.gPlane.geometry);
 		// const line = new LineSegments(wireframGeo);
 		// line.scale.setScalar(this.shadowParams.scale);
-		// line.material.depthTest = false;
-		// line.material.opacity = 0.25;
-		// line.material.transparent = false;
 		// line.position.y = -5.5;
 		// this.scene.add(line);
 
@@ -762,6 +803,7 @@ void main()
 			dirLight.shadow.mapSize.width = this.lightParams.mapSize;
 			dirLight.shadow.mapSize.height = this.lightParams.mapSize;
 			dirLight.target = this.lightPointerMesh;
+			dirLight.shadow.camera.updateProjectionMatrix();
 			this.gLights?.add(dirLight);
 		}
 
@@ -770,17 +812,19 @@ void main()
 	}
 
 	private temporalUpdate() {
+		console.log('going into temporal update');
 		// Accumulate one frame at a time if temporal is enabled
-		if (
-			(this.shadowParams.temporal || this.shadowParams.frames === Infinity) &&
-			this.shadowCount < this.shadowParams.frames &&
-			this.shadowCount < this.shadowParams.limit &&
-			this.modelsLoaded
-		) {
-			this.renderShadows();
-			this.shadowCount++;
-		} else {
-			this.shadowsLoaded = true;
+		if (this.modelsLoaded) {
+			if (
+				(this.shadowParams.temporal || this.shadowParams.frames === Infinity) &&
+				this.shadowCount < this.shadowParams.frames &&
+				this.shadowCount < this.shadowParams.limit
+			) {
+				this.renderShadows();
+				this.shadowCount++;
+			} else {
+				this.shadowsLoaded = true;
+			}
 		}
 	}
 
@@ -1023,10 +1067,12 @@ void main()
 	animate() {
 		requestAnimationFrame(() => this.animate());
 		if (this.controls && this.camera && this.renderer && this.scene) {
+			this.stats.begin();
 			this.renderer.render(this.scene, this.camera);
 			this.controls.update();
+			if (!this.shadowsLoaded) this.temporalUpdate();
+			this.stats.end();
 		}
-		this.temporalUpdate();
 	}
 
 	changeTruckColor(color: string) {
@@ -1285,7 +1331,7 @@ void main()
 		this.controls.target = this.cameraTracker.position;
 	}
 
-	async additionalTraysSelect() {
+	additionalTraysSelect() {
 		//close other compartments
 		this.closeTruckslide();
 		this.resetGlobalLight();
@@ -1386,14 +1432,14 @@ void main()
 		if (this.ShortLowSides) {
 			gsap.to(this.ShortLowSides.getObjectByName('lowside-hinge')!.rotation, {
 				duration: 2,
-				x: 2 * Math.PI * (160 / 360),
+				x: Math.PI * (160 / 360),
 				ease: 'expo'
 			});
 		}
 
 		gsap.to(this.LongLowSides.getObjectByName('long-ls-left-hinge')!.rotation, {
 			duration: 2,
-			x: 2 * Math.PI * (160 / 360),
+			x: Math.PI * (160 / 360),
 			ease: 'expo'
 		});
 	}
@@ -1402,14 +1448,14 @@ void main()
 		if (this.ShortLowSides) {
 			gsap.to(this.ShortLowSides.getObjectByName('lowside-hinge')!.rotation, {
 				duration: 2,
-				x: 2 * Math.PI * (90 / 360),
+				x: 0,
 				ease: 'expo'
 			});
 		}
 
 		gsap.to(this.LongLowSides.getObjectByName('long-ls-left-hinge')!.rotation, {
 			duration: 2,
-			x: 2 * Math.PI * (90 / 360),
+			x: 0,
 			ease: 'expo'
 		});
 	}
@@ -1476,7 +1522,7 @@ void main()
 
 	resetGlobalLight() {
 		gsap.to(this.renderer, { duration: 2, toneMappingExposure: 1, ease: 'expo' });
-		// gsap.to(this.testLight, { duration: 0.015, intensity: 0, ease: 'expo' });
+		gsap.to(this.testLight, { duration: 0.015, intensity: 0, ease: 'expo' });
 	}
 
 	async renderGullwingTray(enable: boolean) {
@@ -1999,7 +2045,7 @@ void main()
 		if (this.queuedAnimations.length) {
 			const animations = this.queuedAnimations;
 			for (const animation of animations) {
-				console.log('Removing animation: ', animation);
+				console.debug('Removing animation: ', animation);
 				animation.kill();
 			}
 			this.queuedAnimations = [];
@@ -2008,7 +2054,7 @@ void main()
 
 	#addToAnimationQueue(animation: gsap.core.Tween) {
 		this.queuedAnimations.push(animation);
-		console.log('Adding to queue: ', this.queuedAnimations);
+		console.debug('Adding to queue: ', this.queuedAnimations);
 	}
 
 	async chooseXT1200() {
@@ -2602,9 +2648,23 @@ void main()
 			return;
 		}
 
-		const obj = object.getObjectByName(id) as Mesh;
+		const obj = object.getObjectByName(id);
 
-		obj.material = material;
+		if (!obj) {
+			console.error(`ojbect with id: ${id} was not found`);
+			return;
+		}
+
+		if (obj instanceof Mesh) {
+			obj.material = material;
+		} else if (obj instanceof Object3D) {
+			const child = obj.children[0];
+			if (child && child instanceof Mesh) {
+				child.material = material;
+			} else {
+				console.error('child was not instanceof Mesh: ', child);
+			}
+		}
 	}
 
 	switchToDiamondPlate() {
