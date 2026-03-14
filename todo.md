@@ -24,12 +24,12 @@
 - [x] pup_extras - ladder rack, additional trays
 - [x] Long Flat Hatch
 - [x] Long domed hatch
-- [] Long gladiator flat hatch
-- [] Long gladiator domed hatch
+- [x] Long gladiator flat hatch
+- [x] Long gladiator domed hatch
 - [x] Short flat hatch
-- [] Short domed hatch
-- [] Short gladiator flat hatch
-- [] Short gladiator domed hatch
+- [x] Short domed hatch
+- [x] Short gladiator flat hatch
+- [x] Short gladiator domed hatch
 - [x] Headache Rack Post
 - [x] Headache Rack Hex
 - [x] Long low sides

@@ -637,23 +637,6 @@ void main()
 						child.receiveShadow = true;
 					});
 
-					this.LongFlatHatch.traverse((obj) => {
-						console.log({
-							name: obj.name,
-							type: obj.type,
-							isMesh: (obj as Mesh).isMesh === true,
-							material: (obj as Mesh).material,
-							obj
-						});
-					});
-
-					const il = this.LongLowSides.getObjectByName('standard-long-left-lid')
-						?.children[0] as Mesh;
-
-					console.log(il.geometry.attributes.uv);
-
-					console.log({ parent: this.LongLowSides.getObjectByName('standard-long-left-lid'), il });
-
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
 					// 	this.bdpMaterial;
 					// (this.GullwingModel.getObjectByName('gw-decimated-left-lid') as Mesh).material =
@@ -747,6 +730,15 @@ void main()
 		this.#loadingExtraData = true;
 		try {
 			const model = await this.loader.loadAsync(url);
+			model.scene.traverse((obj) => {
+				console.log({
+					name: obj.name,
+					type: obj.type,
+					isMesh: (obj as Mesh).isMesh === true,
+					material: (obj as Mesh).material,
+					obj
+				});
+			});
 			return model.scene;
 		} catch (err) {
 			throw new Error('Could not fetch model');
@@ -2656,21 +2648,31 @@ void main()
 		const obj = object.getObjectByName(id);
 
 		if (!obj) {
-			console.error(`ojbect with id: ${id} was not found`);
+			console.error(`[assignNewMaterial]: object with id "${id}" was not found`);
 			return;
 		}
 
 		if (obj instanceof Mesh) {
 			obj.material = material;
-		} else if (obj instanceof Object3D) {
-			// might change this to traverse through instead of selecting first child
-			const child = obj.children.find((c) => c instanceof Mesh);
-			if (child && child instanceof Mesh) {
-				child.material = material;
-			} else {
-				console.error('child was not instanceof Mesh: ', child);
-			}
+			return;
 		}
+
+		const meshes: Mesh[] = [];
+
+		obj.traverse((child) => {
+			if (child instanceof Mesh) {
+				meshes.push(child);
+			}
+		});
+
+		if (!meshes.length) {
+			console.error('[assignNewMaterial]: No meshes found in', obj);
+			return;
+		}
+
+		meshes.forEach((mesh) => {
+			mesh.material = material;
+		});
 	}
 
 	switchToDiamondPlate() {
