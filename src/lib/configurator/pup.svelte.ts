@@ -701,8 +701,8 @@ void main()
 
 					// Clear shadows after all objects are loaded
 					// This traverses the scene and finds which objects cast shadows
-					this.setupAccumulativeShadows();
-					this.plm?.clear();
+					// this.setupAccumulativeShadows();
+					// this.plm?.clear();
 					this.modelsLoaded = true;
 
 					console.log({ fh: this.LongFlatHatch });
@@ -710,8 +710,9 @@ void main()
 					setInterval(() => {
 						console.log(
 							this.renderer.info.render,
-							this.renderer.info.memory,
-							this.renderer.info.programs
+							this.renderer.info.programs,
+							this.renderer.info.memory.textures,
+							this.renderer.info.memory.geometries
 						);
 					}, 5000);
 				}

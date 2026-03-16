@@ -14,7 +14,7 @@ export const modelUrlMap = {
 	shortGladDHData: './models/seperate-models/gltfpack/shortGladiatorDomedHatch_gltfpack.glb',
 	longGladDHData: './models/seperate-models/gltfpack/longGladiatorDomedHatch_gltfpack.glb',
 	PupExtrasData: './models/seperate-models/gltfpack/pup_extras_gltfpack.glb',
-	TSBaseData: './models/seperate-models/truckslide-base.gltf',
-	TSData1200: './models/seperate-models/truckslide-xt1200.gltf',
-	TSData2000: './models/seperate-models/truckslide-xt2000.gltf'
+	TSBaseData: './models/seperate-models/gltfpack/truckslide_base_gltfpack.glb',
+	TSData1200: './models/seperate-models/gltfpack/truckslide_xt1200_gltfpack.glb',
+	TSData2000: './models/seperate-models/gltfpack/truckslide_xt2000_gltfpack.glb'
 };
