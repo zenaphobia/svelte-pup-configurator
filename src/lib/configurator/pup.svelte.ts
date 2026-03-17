@@ -53,6 +53,7 @@ import { modelUrlMap } from './data.js';
 import gsap from 'gsap';
 import { getInitial3DProfile } from '$lib';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import { PUBLIC_CDN } from '$env/static/public';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
@@ -129,12 +130,12 @@ void main()
 	isTruckslideOpen = false;
 
 	// #region Materials
-	private metalMat: MeshStandardMaterial;
-	private windowMat: MeshPhysicalMaterial;
-	private redGlassMat: MeshPhysicalMaterial;
-	private truckPaintMat: MeshPhysicalMaterial;
-	private clearGlassMat: MeshPhysicalMaterial;
-	private bdpMaterial: MeshStandardMaterial;
+	private metalMat: MeshStandardMaterial = new MeshStandardMaterial();
+	private windowMat: MeshPhysicalMaterial = new MeshPhysicalMaterial();
+	private redGlassMat: MeshPhysicalMaterial = new MeshPhysicalMaterial();
+	private truckPaintMat: MeshPhysicalMaterial = new MeshPhysicalMaterial();
+	private clearGlassMat: MeshPhysicalMaterial = new MeshPhysicalMaterial();
+	private bdpMaterial: MeshStandardMaterial = new MeshStandardMaterial();
 	private dpMaterial: MeshStandardMaterial = new MeshStandardMaterial();
 	private blackMetalMat: MeshStandardMaterial = new MeshStandardMaterial();
 	private leopardMaterial: MeshStandardMaterial = new MeshStandardMaterial();
@@ -150,7 +151,7 @@ void main()
 	private shadowMaterial?: InstanceType<typeof SoftShadowMaterial>;
 	private shadowCount = 0;
 	// private gui = new GUI({ title: 'Debugger' });
-	private lightPointerMesh: Mesh;
+	private lightPointerMesh: Mesh = new Mesh();
 	private stats = new Stats();
 
 	// Shadow configuration
@@ -188,7 +189,7 @@ void main()
 	// Triggered by loading models/textures outside of the starting default configuration
 	#loadingExtraData = $state(false);
 	loaded = $derived.by(() => {
-		if (this.texturesLoaded && this.modelsLoaded && this.shadowsLoaded) {
+		if (this.texturesLoaded && this.modelsLoaded) {
 			return true;
 		}
 
@@ -250,78 +251,17 @@ void main()
 		this.renderer.shadowMap.enabled = true;
 		// this.renderer.shadowMap.type = PCFSoftShadowMap;
 
-		// #region Material setup
-		const textureLoader = new TextureLoader();
-		Promise.all([
-			textureLoader.loadAsync('./textures/bdp-final.jpg'),
-			textureLoader.loadAsync('./textures/dp-pattern-final.jpg'),
-			textureLoader.loadAsync('./textures/BK62-bump.jpg'),
-			textureLoader.loadAsync('./textures/emissionMap.png')
-		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture, emissionMap]) => {
-			this.bdpBumpTexture = bdpBumpTexture;
-			this.bdpBumpTexture.flipY = false;
-			this.bdpBumpTexture.wrapT = RepeatWrapping;
-			this.bdpBumpTexture.wrapS = RepeatWrapping;
-			this.bdpBumpTexture.repeat.set(2, 2);
+		// Draco Loader
+		this.dracoLoader = new DRACOLoader();
+		this.dracoLoader.setDecoderPath('./draco/');
+		this.loader.setDRACOLoader(this.dracoLoader);
+		this.loader.setMeshoptDecoder(MeshoptDecoder);
 
-			this.dpBumpTexture = dpBumpTexture;
-			this.dpBumpTexture.flipY = false;
-			this.dpBumpTexture.wrapS = RepeatWrapping;
-			this.dpBumpTexture.wrapT = RepeatWrapping;
-			this.dpBumpTexture.repeat.set(2, 2);
-
-			this.BK62BumpTexture = BK62BumpTexture;
-			this.BK62BumpTexture.flipY = false;
-			this.BK62BumpTexture.wrapS = RepeatWrapping;
-			this.BK62BumpTexture.wrapT = RepeatWrapping;
-			this.BK62BumpTexture.repeat.set(2, 2);
-
-			this.emissionMap = emissionMap;
-			this.emissionMap.flipY = false;
-
-			this.bdpMaterial = new MeshStandardMaterial({
-				color: 0x000000,
-				metalness: 1,
-				roughness: 0.15,
-				bumpScale: 0.85,
-				bumpMap: this.bdpBumpTexture,
-				name: 'bdpMaterial'
-			});
-
-			this.blackMetalMat = new MeshStandardMaterial({
-				color: 0x000000,
-				metalness: 1,
-				roughness: 0.1,
-				bumpScale: 0.85,
-				bumpMap: this.BK62BumpTexture,
-				name: 'blackMetalMat'
-			});
-			this.leopardMaterial = new MeshStandardMaterial({
-				color: 0xffffff,
-				map: this.dpBumpTexture,
-				metalness: 1,
-				roughness: 0.15,
-				bumpScale: 0.85,
-				bumpMap: this.bdpBumpTexture,
-				name: 'leopardMaterial'
-			});
-			this.dpMaterial = new MeshStandardMaterial({
-				color: 0xffffff,
-				metalness: 1,
-				roughness: 0.15,
-				bumpScale: 0.85,
-				bumpMap: this.dpBumpTexture,
-				name: 'dpMaterial'
-			});
-			this.BK62Mat = new MeshStandardMaterial({
-				color: 0x000000,
-				metalness: 1,
-				roughness: 0.15,
-				bumpScale: 0.85,
-				bumpMap: this.BK62BumpTexture,
-				name: 'Bk62Mat'
-			});
-		});
+		// ktx2 Loader
+		this.ktx2Loader = new KTX2Loader();
+		this.ktx2Loader.setTranscoderPath('./basis/');
+		this.ktx2Loader.detectSupport(this.renderer);
+		this.loader.setKTX2Loader(this.ktx2Loader);
 
 		this.carPaintTexture = new CanvasTexture(new FlakesTexture());
 		this.carPaintTexture.wrapT = RepeatWrapping;
@@ -329,31 +269,18 @@ void main()
 		this.carPaintTexture.repeat.x = 40;
 		this.carPaintTexture.repeat.y = 40;
 
-		this.uniforms = {
-			u_time: { value: 0.0 }
-		};
-		//Materials
-		this.metalMat = new MeshStandardMaterial({
-			color: 0xffffff,
-			metalness: 1,
-			roughness: 0.1,
-			name: 'metalMat'
+		this.truckPaintMat = new MeshPhysicalMaterial({
+			color: 0x1f1f1f,
+			clearcoat: 1.0,
+			clearcoatRoughness: 0.1,
+			roughness: 0.05,
+			normalMap: this.carPaintTexture,
+			normalScale: new Vector2(0.03, 0.03),
+			sheen: 1,
+			sheenRoughness: 0.155,
+			sheenColor: 0xffffff
 		});
-		this.bdpMaterial = new MeshStandardMaterial({
-			color: 0x000000,
-			metalness: 1,
-			roughness: 0.15,
-			bumpScale: 0.85,
-			bumpMap: this.bdpBumpTexture,
-			name: 'bdpMaterial'
-		});
-		// this.patriotMat = new MeshStandardMaterial({
-		// 	color: 0x000000,
-		// 	metalness: 1,
-		// 	roughness: 0.15,
-		// 	bumpScale: 0.85,
-		// 	bumpMap: this.patriotTexture
-		// });
+
 		this.windowMat = new MeshPhysicalMaterial({
 			color: 0x000000,
 			transparent: true,
@@ -378,17 +305,6 @@ void main()
 			roughness: 0,
 			opacity: 0.55
 		});
-		this.truckPaintMat = new MeshPhysicalMaterial({
-			color: 0x1f1f1f,
-			clearcoat: 1.0,
-			clearcoatRoughness: 0.1,
-			roughness: 0.05,
-			normalMap: this.carPaintTexture,
-			normalScale: new Vector2(0.03, 0.03),
-			sheen: 1,
-			sheenRoughness: 0.155,
-			sheenColor: 0xffffff
-		});
 		this.emissiveLight = new MeshStandardMaterial({
 			color: 0xffffff,
 			emissive: 0xffffff,
@@ -397,12 +313,6 @@ void main()
 		this.blankTexture = new MeshBasicMaterial({
 			color: 0x00ff00
 		});
-		// this.customMaterial = new ShaderMaterial({
-		// 	vertexShader: this.vert,
-		// 	fragmentShader: this.frag,
-		// 	uniforms: this.uniforms,
-		// 	transparent: true
-		// });
 
 		// CameraHelper
 		const geometry = new BoxGeometry(1, 1, 1);
@@ -453,11 +363,112 @@ void main()
 		this.lightPointerMesh.visible = false;
 		// this.scene.add(this.lightPointerMesh);
 
+		const newRot = new Euler(0, 90, 0);
+		this.scene.environmentRotation = newRot;
+		this.scene.backgroundRotation = newRot;
+
+		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+		// this.controls.minDistance = 3;
+		this.controls.enablePan = false;
+		this.controls.enableDamping = true;
+		this.controls.maxPolarAngle = 1.6;
+		this.controls.maxDistance = 100;
+		this.controls.maxAzimuthAngle = 0.5;
+		this.controls.minAzimuthAngle = -3.5;
+		this.controls.rotateSpeed = this.deviceProfile.probablyMobile
+			? this.container.offsetWidth / 1000
+			: this.container.offsetWidth / 8000;
+
+		this.loadAssets().then(() => {
+			this.animate();
+		});
+	}
+
+	async loadAssets() {
+		const textureLoader = new TextureLoader();
 		const hdrLoader = new HDRLoader();
 
-		const LDRImage = 'ldrs/ktx2/spruit_sunrise_2k.ktx2';
+		await Promise.all([
+			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/bdp-final.jpg`),
+			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/dp-pattern-final.jpg`),
+			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/BK62-bump.jpg`),
+			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/emissionMap.png`)
+		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture, emissionMap]) => {
+			this.bdpBumpTexture = bdpBumpTexture;
+			this.bdpBumpTexture.flipY = false;
+			this.bdpBumpTexture.wrapT = RepeatWrapping;
+			this.bdpBumpTexture.wrapS = RepeatWrapping;
+			this.bdpBumpTexture.repeat.set(2, 2);
 
-		Promise.all([
+			this.dpBumpTexture = dpBumpTexture;
+			this.dpBumpTexture.flipY = false;
+			this.dpBumpTexture.wrapS = RepeatWrapping;
+			this.dpBumpTexture.wrapT = RepeatWrapping;
+			this.dpBumpTexture.repeat.set(2, 2);
+
+			this.BK62BumpTexture = BK62BumpTexture;
+			this.BK62BumpTexture.flipY = false;
+			this.BK62BumpTexture.wrapS = RepeatWrapping;
+			this.BK62BumpTexture.wrapT = RepeatWrapping;
+			this.BK62BumpTexture.repeat.set(2, 2);
+
+			this.emissionMap = emissionMap;
+			this.emissionMap.flipY = false;
+
+			this.metalMat = new MeshStandardMaterial({
+				color: 0xffffff,
+				metalness: 1,
+				roughness: 0.1,
+				name: 'metalMat'
+			});
+			this.bdpMaterial = new MeshStandardMaterial({
+				color: 0x000000,
+				metalness: 1,
+				roughness: 0.15,
+				bumpScale: 0.85,
+				bumpMap: this.bdpBumpTexture,
+				name: 'bdpMaterial'
+			});
+
+			this.blackMetalMat = new MeshStandardMaterial({
+				color: 0x000000,
+				metalness: 1,
+				roughness: 0.1,
+				bumpScale: 0.85,
+				bumpMap: this.BK62BumpTexture,
+				name: 'blackMetalMat'
+			});
+			this.leopardMaterial = new MeshStandardMaterial({
+				color: 0xffffff,
+				map: this.dpBumpTexture,
+				metalness: 1,
+				roughness: 0.15,
+				bumpScale: 0.85,
+				bumpMap: this.bdpBumpTexture,
+				name: 'leopardMaterial'
+			});
+			this.dpMaterial = new MeshStandardMaterial({
+				color: 0xffffff,
+				metalness: 1,
+				roughness: 0.15,
+				bumpScale: 0.85,
+				bumpMap: this.dpBumpTexture,
+				name: 'dpMaterial'
+			});
+			this.BK62Mat = new MeshStandardMaterial({
+				color: 0x000000,
+				metalness: 1,
+				roughness: 0.15,
+				bumpScale: 0.85,
+				bumpMap: this.BK62BumpTexture,
+				name: 'Bk62Mat'
+			});
+
+			console.log('debug: textures loaded');
+		});
+
+		await Promise.all([
 			hdrLoader.loadAsync('hdrs/spruit_sunrise_1k.hdr').then((envMap) => {
 				envMap.mapping = EquirectangularReflectionMapping;
 				this.scene.environment = envMap;
@@ -477,47 +488,17 @@ void main()
 			// })
 		]).then(() => {
 			this.texturesLoaded = true;
+			console.log('hdrs loaded');
 		});
 
-		const newRot = new Euler(0, 90, 0);
-		this.scene.environmentRotation = newRot;
-		this.scene.backgroundRotation = newRot;
-
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
-		// this.controls.minDistance = 3;
-		this.controls.enablePan = false;
-		this.controls.enableDamping = true;
-		this.controls.maxPolarAngle = 1.6;
-		this.controls.maxDistance = 100;
-		this.controls.maxAzimuthAngle = 0.5;
-		this.controls.minAzimuthAngle = -3.5;
-		this.controls.rotateSpeed = this.deviceProfile.probablyMobile
-			? this.container.offsetWidth / 1000
-			: this.container.offsetWidth / 8000;
-
-		// Draco Loader
-		this.dracoLoader = new DRACOLoader();
-		this.dracoLoader.setDecoderPath('./draco/');
-		this.loader.setDRACOLoader(this.dracoLoader);
-		this.loader.setMeshoptDecoder(MeshoptDecoder);
-
-		// ktx2 Loader
-		this.ktx2Loader = new KTX2Loader();
-		this.ktx2Loader.setTranscoderPath('./basis/');
-		this.ktx2Loader.detectSupport(this.renderer);
-
-		this.loader.setKTX2Loader(this.ktx2Loader);
-
-		// #region load default PUP
-		Promise.all([
-			this.loader.loadAsync('./models/seperate-models/truck_gltfpack_final.glb'),
+		await Promise.all([
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/truck_gltfpack_final.glb`),
 			// this.loader.loadAsync('./models/seperate-models/gullwing.gltf'),
-			this.loader.loadAsync('./models/seperate-models/gltfpack/headacheRackHex_gltfpack.glb'),
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/headacheRackHex_gltfpack.glb`),
 			// this.loader.loadAsync('./models/seperate-models/headacheRackPost.gltf'),
-			this.loader.loadAsync('./models/seperate-models/gltfpack/longLowSides_gltfpack.glb'),
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/longLowSides_gltfpack.glb`),
 			// this.loader.loadAsync('./models/seperate-models/shortLowSides.gltf'),
-			this.loader.loadAsync('./models/seperate-models/gltfpack/longFlatHatch_gltfpack.glb'),
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/longFlatHatch_gltfpack.glb`),
 			// this.loader.loadAsync('./models/seperate-models/shortFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/longDomedHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/ShortDomedHatch.gltf'),
@@ -525,7 +506,7 @@ void main()
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/shortGladiatorDomedHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorDomedHatch.gltf'),
-			this.loader.loadAsync('./models/seperate-models/gltfpack/pup_extras_gltfpack.glb')
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/pup_extras_gltfpack.glb`)
 			// this.loader.loadAsync('./models/seperate-models/truckslide-base.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt1200.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt2000.gltf')
@@ -615,27 +596,31 @@ void main()
 					//Setup Materials
 					this.scene.traverse((child) => {
 						// initial pup material setup
-						if (child.material && child.material.name === 'accent color') {
-							child.material = this.blackMetalMat;
-							child.geometry.name = 'accentColor';
-						} else if (child.material && child.material.name === 'Black Diamond Plate Test 3') {
-							child.material = this.BK62Mat;
-							child.geometry.name = 'lidMaterial';
-						}
-						// truck materials setup
-						else if (child.material && child.material.name === 'windowglass.001') {
-							child.material = this.windowMat;
-						} else if (child.material && child.material.name === 'redglass.001') {
-							child.material = this.redGlassMat;
-						} else if (child.material && child.material.name === 'clearglass.001') {
-							child.material = this.clearGlassMatLights;
-						} else if (child.material && child.material.name === 'Carpaint') {
-							child.material = this.truckPaintMat;
+						if (child instanceof Mesh) {
+							if (child.material && child.material.name === 'accent color') {
+								child.material = this.blackMetalMat;
+								child.geometry.name = 'accentColor';
+							} else if (child.material && child.material.name === 'Black Diamond Plate Test 3') {
+								child.material = this.BK62Mat;
+								child.geometry.name = 'lidMaterial';
+							}
+							// truck materials setup
+							else if (child.material && child.material.name === 'windowglass.001') {
+								child.material = this.windowMat;
+							} else if (child.material && child.material.name === 'redglass.001') {
+								child.material = this.redGlassMat;
+							} else if (child.material && child.material.name === 'clearglass.001') {
+								child.material = this.clearGlassMatLights;
+							} else if (child.material && child.material.name === 'Carpaint') {
+								child.material = this.truckPaintMat;
+							}
 						}
 
 						child.castShadow = true;
 						child.receiveShadow = true;
 					});
+
+					console.log('debug: scene traversed and materials set');
 
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
 					// 	this.bdpMaterial;
@@ -705,7 +690,7 @@ void main()
 					// this.plm?.clear();
 					this.modelsLoaded = true;
 
-					console.log({ fh: this.LongFlatHatch });
+					console.log('debug: models loaded');
 
 					setInterval(() => {
 						console.log(
@@ -731,15 +716,6 @@ void main()
 		this.#loadingExtraData = true;
 		try {
 			const model = await this.loader.loadAsync(url);
-			model.scene.traverse((obj) => {
-				console.log({
-					name: obj.name,
-					type: obj.type,
-					isMesh: (obj as Mesh).isMesh === true,
-					material: (obj as Mesh).material,
-					obj
-				});
-			});
 			return model.scene;
 		} catch (err) {
 			throw new Error('Could not fetch model');
@@ -1014,6 +990,7 @@ void main()
 
 		model.traverse((child) => {
 			if (child instanceof Mesh) {
+				console.log(child);
 				if (child.material && child.material.name === 'accent color') {
 					child.material = accentMaterial;
 					child.geometry.name = 'accentColor';
@@ -1068,7 +1045,7 @@ void main()
 			this.stats.begin();
 			this.renderer.render(this.scene, this.camera);
 			this.controls.update();
-			if (!this.shadowsLoaded) this.temporalUpdate();
+			// if (!this.shadowsLoaded) this.temporalUpdate();
 			this.stats.end();
 		}
 	}
@@ -2003,8 +1980,6 @@ void main()
 
 		this.HeadacheRackPost.visible = true;
 		this.HeadacheRackHex.visible = false;
-
-		console.log(this.HeadacheRackHex, this.HeadacheRackHex.visible);
 
 		this.clientPUP.headacheRack = 'Post Headache Rack';
 	}

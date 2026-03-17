@@ -15,7 +15,6 @@
 		untrack(() => {
 			if (canvas) {
 				configurator = new PupConfigurator(canvas);
-				configurator.animate();
 			}
 		});
 	});
