@@ -647,12 +647,6 @@ void main()
 						child.receiveShadow = true;
 					});
 
-					this.TruckModel.traverse((child) => {
-						if (child instanceof Mesh) {
-							console.log(child);
-						}
-					});
-
 					console.log('debug: scene traversed and materials set');
 
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
@@ -726,12 +720,7 @@ void main()
 					console.log('debug: models loaded');
 
 					setInterval(() => {
-						console.log(
-							this.renderer.info.render,
-							this.renderer.info.programs,
-							this.renderer.info.memory.textures,
-							this.renderer.info.memory.geometries
-						);
+						console.log(this.renderer.info);
 					}, 5000);
 				}
 			)
@@ -758,6 +747,7 @@ void main()
 			}
 			this.#loadingExtraDataTimeout = setTimeout(() => {
 				this.#loadingExtraData = false;
+				this.#loadingExtraDataTimeout = null;
 			}, 500);
 		}
 	}
@@ -1028,7 +1018,6 @@ void main()
 
 		model.traverse((child) => {
 			if (child instanceof Mesh) {
-				console.log(child);
 				if (child.material && child.material.name === 'accent color') {
 					child.material = accentMaterial;
 					child.geometry.name = 'accentColor';
