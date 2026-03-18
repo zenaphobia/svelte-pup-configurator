@@ -33,7 +33,7 @@
 	<Loader loaded={configurator.loaded} progress={configurator.progress} />
 
 	{#if configurator.loadingExtraData}
-		<div in:fly={{ duration: 150, y: -5 }} out:fly={{ duration: 150, y: 5, delay: 1250 }}>
+		<div in:fly={{ duration: 150, y: -5 }} out:fly={{ duration: 150, y: 5 }}>
 			<DataLoader loaded={configurator.loadingExtraData} progress={configurator.progress} />
 		</div>
 	{/if}

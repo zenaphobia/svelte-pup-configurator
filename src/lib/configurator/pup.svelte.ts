@@ -191,6 +191,7 @@ void main()
 	private shadowsLoaded = $state(false);
 	// Triggered by loading models/textures outside of the starting default configuration
 	#loadingExtraData = $state(false);
+	#loadingExtraDataTimeout: number | null = null;
 	loaded = $derived.by(() => {
 		if (this.texturesLoaded && this.modelsLoaded) {
 			return true;
@@ -752,7 +753,12 @@ void main()
 		} catch (err) {
 			throw new Error('Could not fetch model');
 		} finally {
-			this.#loadingExtraData = false;
+			if (this.#loadingExtraDataTimeout) {
+				clearTimeout(this.#loadingExtraDataTimeout);
+			}
+			this.#loadingExtraDataTimeout = setTimeout(() => {
+				this.#loadingExtraData = false;
+			}, 500);
 		}
 	}
 
@@ -1148,29 +1154,25 @@ void main()
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		this.#addToAnimationQueue(
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: -4,
-				y: 4,
-				z: 0,
-				ease: 'expo',
-				onComplete: () => {}
-			})
-		);
+		gsap.to(this.camera.position, {
+			duration: 2,
+			x: -4,
+			y: 4,
+			z: 0,
+			ease: 'expo',
+			onComplete: () => {}
+		});
 
-		this.#addToAnimationQueue(
-			gsap.to(this.cameraTracker.position, {
-				duration: 2,
-				x: 5,
-				y: 2,
-				z: 0,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
-			})
-		);
+		gsap.to(this.cameraTracker.position, {
+			duration: 2,
+			x: 5,
+			y: 2,
+			z: 0,
+			ease: 'expo',
+			onComplete: () => {
+				enableOrbitControls(id);
+			}
+		});
 		// this.controls.target = this.cameraTracker.position;
 		// this.controls.minDistance = 6;
 		// this.controls.maxDistance = 20;
@@ -1187,28 +1189,24 @@ void main()
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		this.#addToAnimationQueue(
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: this.standardCameraAngle.x,
-				y: this.standardCameraAngle.y,
-				z: this.standardCameraAngle.z,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
-			})
-		);
+		gsap.to(this.camera.position, {
+			duration: 2,
+			x: this.standardCameraAngle.x,
+			y: this.standardCameraAngle.y,
+			z: this.standardCameraAngle.z,
+			ease: 'expo',
+			onComplete: () => {
+				enableOrbitControls(id);
+			}
+		});
 
-		this.#addToAnimationQueue(
-			gsap.to(this.cameraTracker.position, {
-				duration: 2,
-				x: 0,
-				y: -1,
-				z: 0,
-				ease: 'expo'
-			})
-		);
+		gsap.to(this.cameraTracker.position, {
+			duration: 2,
+			x: 0,
+			y: -1,
+			z: 0,
+			ease: 'expo'
+		});
 
 		// this.controls.target = this.cameraTracker.position;
 	}
