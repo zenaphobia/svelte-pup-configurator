@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PupConfigurator } from '$lib/configurator/pup.svelte';
-	import { selectedItemContext } from '$lib/stores.svelte';
+	import { getIcon, selectedItemContext } from '$lib/stores.svelte';
 	import { informationText } from '$lib/stores.svelte';
 	import { twMerge } from 'tailwind-merge';
 	import { MediaQuery } from 'svelte/reactivity';
@@ -79,13 +79,13 @@
 					fn?.();
 				}}
 				class={twMerge(
-					'w-10 h-10 rounded-lg p-2 aspect-square bg-gray-300 items-center text-xs hover:scale-115 transition-all',
+					'w-15 h-15 rounded-lg p-2 aspect-square bg-gray-300 items-center text-xs hover:scale-115 transition-all',
 					selectedItemContext.context &&
 						selectedItemContext.context.name === item &&
 						'!bg-[#e92027]'
 				)}
 			>
-				{item}
+				<img src={getIcon(item)} alt="" />
 			</button>
 		{/each}
 	</div>

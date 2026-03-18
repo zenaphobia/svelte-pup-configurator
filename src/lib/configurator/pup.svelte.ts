@@ -117,7 +117,6 @@ void main()
 	private BK62BumpTexture: Texture = new Texture();
 	private carPaintTexture: Texture = new Texture();
 	private blankTexture: MeshBasicMaterial = new MeshBasicMaterial();
-	private emissionMap: Texture = new Texture();
 
 	clientPUP = new PickupPack();
 	cameraTracker: Mesh;
@@ -380,21 +379,21 @@ void main()
 			? this.container.offsetWidth / 1000
 			: this.container.offsetWidth / 8000;
 
+		this.controls.target = this.cameraTracker.position;
+
 		this.loadAssets().then(() => {
 			this.animate();
 		});
 	}
 
 	async loadAssets() {
-		const textureLoader = new TextureLoader();
 		const hdrLoader = new HDRLoader();
 
 		await Promise.all([
-			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/bdp-final.jpg`),
-			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/dp-pattern-final.jpg`),
-			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/BK62-bump.jpg`),
-			textureLoader.loadAsync(`${PUBLIC_CDN}/textures/emissionMap.png`)
-		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture, emissionMap]) => {
+			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/bdp-final.ktx2`),
+			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/dp-pattern-final.ktx2`),
+			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/BK62-bump.ktx2`)
+		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture]) => {
 			this.bdpBumpTexture = bdpBumpTexture;
 			this.bdpBumpTexture.flipY = false;
 			this.bdpBumpTexture.wrapT = RepeatWrapping;
@@ -412,9 +411,6 @@ void main()
 			this.BK62BumpTexture.wrapS = RepeatWrapping;
 			this.BK62BumpTexture.wrapT = RepeatWrapping;
 			this.BK62BumpTexture.repeat.set(2, 2);
-
-			this.emissionMap = emissionMap;
-			this.emissionMap.flipY = false;
 
 			this.metalMat = new MeshStandardMaterial({
 				color: 0xffffff,
@@ -469,23 +465,23 @@ void main()
 		});
 
 		await Promise.all([
-			hdrLoader.loadAsync('hdrs/spruit_sunrise_1k.hdr').then((envMap) => {
+			hdrLoader.loadAsync(`${PUBLIC_CDN}/hdrs/spruit_sunrise_1k.hdr`).then((envMap) => {
 				envMap.mapping = EquirectangularReflectionMapping;
 				this.scene.environment = envMap;
+			}),
+			this.ktx2Loader.loadAsync('./ldrs/ktx2/spruit_sunrise_2k.ktx2').then((skyboxTexture) => {
+				const skybox = new GroundedSkybox(skyboxTexture, 10, 256, 256);
+				skyboxTexture.flipY = true;
+				skybox.position.y = 4.25;
+				skybox.rotateY(2.1);
+				this.scene.add(skybox);
+				skybox.traverse((o) => {
+					if (o instanceof Mesh) {
+						o.castShadow = false;
+						o.receiveShadow = false;
+					}
+				});
 			})
-			// this.ktx2Loader.loadAsync(LDRImage).then((skyboxTexture) => {
-			// 	const skybox = new GroundedSkybox(skyboxTexture, 15, 256, 256);
-			// 	skyboxTexture.flipY = true;
-			// 	skybox.position.y = 9.1;
-			// 	skybox.rotateY(2.1);
-			// 	this.scene.add(skybox);
-			// 	skybox.traverse((o) => {
-			// 		if (o instanceof Mesh) {
-			// 			o.castShadow = false;
-			// 			o.receiveShadow = false;
-			// 		}
-			// 	});
-			// })
 		]).then(() => {
 			this.texturesLoaded = true;
 			console.log('hdrs loaded');
@@ -1116,25 +1112,30 @@ void main()
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: -4,
-			y: 4,
-			z: 0,
-			ease: 'expo',
-			onComplete: () => {}
-		});
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: 5,
-			y: 2,
-			z: 0,
-			ease: 'expo',
-			onComplete: () => {
-				enableOrbitControls(id);
-			}
-		});
-		this.controls.target = this.cameraTracker.position;
+		this.#addToAnimationQueue(
+			gsap.to(this.camera.position, {
+				duration: 2,
+				x: -4,
+				y: 4,
+				z: 0,
+				ease: 'expo',
+				onComplete: () => {}
+			})
+		);
+
+		this.#addToAnimationQueue(
+			gsap.to(this.cameraTracker.position, {
+				duration: 2,
+				x: 5,
+				y: 2,
+				z: 0,
+				ease: 'expo',
+				onComplete: () => {
+					enableOrbitControls(id);
+				}
+			})
+		);
+		// this.controls.target = this.cameraTracker.position;
 		// this.controls.minDistance = 6;
 		// this.controls.maxDistance = 20;
 	}
@@ -1150,24 +1151,30 @@ void main()
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: this.standardCameraAngle.x,
-			y: this.standardCameraAngle.y,
-			z: this.standardCameraAngle.z,
-			ease: 'expo',
-			onComplete: () => {
-				enableOrbitControls(id);
-			}
-		});
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: 0,
-			y: -1,
-			z: 0,
-			ease: 'expo'
-		});
-		this.controls.target = this.cameraTracker.position;
+		this.#addToAnimationQueue(
+			gsap.to(this.camera.position, {
+				duration: 2,
+				x: this.standardCameraAngle.x,
+				y: this.standardCameraAngle.y,
+				z: this.standardCameraAngle.z,
+				ease: 'expo',
+				onComplete: () => {
+					enableOrbitControls(id);
+				}
+			})
+		);
+
+		this.#addToAnimationQueue(
+			gsap.to(this.cameraTracker.position, {
+				duration: 2,
+				x: 0,
+				y: -1,
+				z: 0,
+				ease: 'expo'
+			})
+		);
+
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	// changeTargetDistance(number1: number, number2: number) {
@@ -1232,7 +1239,7 @@ void main()
 			}
 		});
 		gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: -1, z: 0, ease: 'expo' });
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	truckslideSelect() {
@@ -1257,7 +1264,7 @@ void main()
 			}
 		});
 		gsap.to(this.cameraTracker.position, { duration: 2, x: -5, y: -1, Z: 0, ease: 'expo' });
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	// ladderRackHoverOn() {
@@ -1303,7 +1310,7 @@ void main()
 
 		// this.controls.minDistance = 10;
 		// this.controls.maxDistance = 30;
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	additionalTraysSelect() {
@@ -1340,7 +1347,7 @@ void main()
 			gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: 0, z: -3, ease: 'expo' });
 		}
 
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 
 		this.openLowSideLid();
 		this.openGullwing();
@@ -1391,7 +1398,7 @@ void main()
 		gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
 		gsap.to(this.renderer, { duration: 2, toneMappingExposure: 0.15, ease: 'expo' });
 
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 
 		this.openLowSideLid();
 	}
@@ -1522,7 +1529,7 @@ void main()
 			ease: 'expo'
 		});
 		gsap.to(this.camera.position, { duration: 2, x: 3.25, y: 4, z: -12, ease: 'expo' });
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	renderLowSideTrays(amount: number) {
@@ -1602,7 +1609,7 @@ void main()
 			gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: 0, z: -3, ease: 'expo' });
 		}
 
-		this.controls.target = this.cameraTracker.position;
+		// this.controls.target = this.cameraTracker.position;
 	}
 
 	renderLadderRack() {
@@ -2378,7 +2385,7 @@ void main()
 		if (this.ShortFlatHatch) {
 			gsap.to(this.ShortFlatHatch.getObjectByName('Decimated_Hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-15 / 360),
+				z: 2 * Math.PI * (-15 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2392,7 +2399,7 @@ void main()
 		if (this.LongDomedHatch) {
 			gsap.to(this.LongDomedHatch.getObjectByName('Shape_IndexedFaceSet012')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-10 / 360),
+				z: 2 * Math.PI * (-10 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2400,7 +2407,7 @@ void main()
 		if (this.ShortDomedHatch) {
 			gsap.to(this.ShortDomedHatch.getObjectByName('Shape_IndexedFaceSet028')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-15 / 360),
+				z: 2 * Math.PI * (-15 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2518,7 +2525,7 @@ void main()
 		if (this.ShortFlatHatch) {
 			gsap.to(this.ShortFlatHatch.getObjectByName('Decimated_Hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2535,7 +2542,7 @@ void main()
 		if (this.LongDomedHatch) {
 			gsap.to(this.LongDomedHatch.getObjectByName('Shape_IndexedFaceSet012')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2544,7 +2551,7 @@ void main()
 		if (this.ShortDomedHatch) {
 			gsap.to(this.ShortDomedHatch.getObjectByName('Shape_IndexedFaceSet028')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});

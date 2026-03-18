@@ -35,9 +35,9 @@
 - [x] Long low sides
 - [x] Short low sides
 - [x] Truck
-- [] Truckslide - base
-- [] Truckslide - 1200 tray
-- [] Truckslide - XT2000 / XT4000 tray
+- [x] Truckslide - base
+- [x] Truckslide - 1200 tray
+- [x] Truckslide - XT2000 / XT4000 tray
 
 ### scripts
 

@@ -94,3 +94,22 @@ export const informationText = {
 } as const;
 
 export const selectedItemContext = new SelectedItem();
+
+export function getIcon(item: string): string {
+	switch (item) {
+		case 'Headache Rack':
+			return './graphic-assets/icons/headacheRackPost.svg';
+		case 'Ladder Rack':
+			return './graphic-assets/icons/ladder_rack.svg';
+		case 'Hatch':
+			return './graphic-assets/icons/hatch.svg';
+		case 'Gullwing':
+			return './graphic-assets/icons/gullwing.svg';
+		case 'Truckslide':
+			return './graphic-assets/icons/truckslide.svg';
+		case 'AdditionalTrays':
+			return './graphic-assets/icons/additional_trays.svg';
+		default:
+			return './graphic-assets/icons/headacheRackPost.svg';
+	}
+}
