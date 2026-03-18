@@ -109,6 +109,12 @@ export function getIcon(item: string): string {
 			return './graphic-assets/icons/truckslide.svg';
 		case 'AdditionalTrays':
 			return './graphic-assets/icons/additional_trays.svg';
+		case 'Finish':
+			return './graphic-assets/icons/finish.svg';
+		case 'Truck Color':
+			return './graphic-assets/icons/truck_color.svg';
+		case 'LED':
+			return './graphic-assets/icons/led.svg';
 		default:
 			return './graphic-assets/icons/headacheRackPost.svg';
 	}

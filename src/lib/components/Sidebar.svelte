@@ -59,7 +59,7 @@
 
 <aside
 	class={twMerge(
-		'absolute block bg-gray-200 text-app-dark rounded-full py-8 px-4 opacity-25 transition-all',
+		'absolute block bg-gray-200 text-app-dark rounded-full py-8 px-4 opacity-25 transition-all border border-gray-300 shadow',
 		large.current
 			? 'left-8 top-1/2 -translate-y-1/2'
 			: 'top-4 left-1/2 -translate-x-1/2 max-w-[80%]',

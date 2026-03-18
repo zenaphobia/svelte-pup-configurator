@@ -11,7 +11,7 @@
 
 - [] Shadows (disable for mobile)
 - [] LDR resolution (low resolution default image for mobile)
-- [] Find other ways to optimize performance
+- [x] Find other ways to optimize performance
 
 [x] Add/Remove additional trays configuration
 [x] Enable lighting configuration

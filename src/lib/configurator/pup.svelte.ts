@@ -20,6 +20,7 @@ import {
 	MeshStandardMaterial,
 	Object3D,
 	PerspectiveCamera,
+	Plane,
 	PlaneGeometry,
 	RepeatWrapping,
 	Scene,
@@ -41,6 +42,7 @@ import {
 	GroundedSkybox,
 	HDRLoader,
 	OrbitControls,
+	EXRLoader,
 	type GLTF
 } from 'three/examples/jsm/Addons.js';
 
@@ -54,6 +56,7 @@ import gsap from 'gsap';
 import { getInitial3DProfile } from '$lib';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { PUBLIC_CDN } from '$env/static/public';
+import { rotate } from 'three/tsl';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
@@ -143,6 +146,7 @@ void main()
 	private BK62Mat: MeshStandardMaterial = new MeshStandardMaterial();
 	private clearGlassMatLights: MeshPhysicalMaterial = new MeshPhysicalMaterial();
 	private defaultLoadingManager: typeof DefaultLoadingManager = DefaultLoadingManager;
+	private contactShadowAlphaMap: Texture = new Texture();
 
 	private plm?: ProgressiveLightMap;
 	private gLights?: Group;
@@ -220,7 +224,7 @@ void main()
 		this.loader = new GLTFLoader();
 		this.fileLoader = new FileLoader();
 		this.scene = new Scene();
-		this.scene.background = new Color('#ededed');
+		this.scene.background = new Color('#d9d9d9');
 		this.container = canvas;
 		this.stats.showPanel(0);
 		document.body.appendChild(this.stats.dom);
@@ -277,7 +281,8 @@ void main()
 			normalScale: new Vector2(0.03, 0.03),
 			sheen: 1,
 			sheenRoughness: 0.155,
-			sheenColor: 0xffffff
+			sheenColor: 0xffffff,
+			name: 'Carpaint'
 		});
 
 		this.windowMat = new MeshPhysicalMaterial({
@@ -388,12 +393,15 @@ void main()
 
 	async loadAssets() {
 		const hdrLoader = new HDRLoader();
+		const textureLoader = new TextureLoader();
+		const exrLoader = new EXRLoader();
 
 		await Promise.all([
 			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/bdp-final.ktx2`),
 			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/dp-pattern-final.ktx2`),
-			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/BK62-bump.ktx2`)
-		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture]) => {
+			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/BK62-bump.ktx2`),
+			this.ktx2Loader.loadAsync(`${PUBLIC_CDN}/textures/ktx2/shadow_alphaMap.ktx2`)
+		]).then(([bdpBumpTexture, dpBumpTexture, BK62BumpTexture, contactShadow]) => {
 			this.bdpBumpTexture = bdpBumpTexture;
 			this.bdpBumpTexture.flipY = false;
 			this.bdpBumpTexture.wrapT = RepeatWrapping;
@@ -412,6 +420,8 @@ void main()
 			this.BK62BumpTexture.wrapT = RepeatWrapping;
 			this.BK62BumpTexture.repeat.set(2, 2);
 
+			this.contactShadowAlphaMap = contactShadow;
+
 			this.metalMat = new MeshStandardMaterial({
 				color: 0xffffff,
 				metalness: 1,
@@ -422,7 +432,7 @@ void main()
 				color: 0x000000,
 				metalness: 1,
 				roughness: 0.15,
-				bumpScale: 0.85,
+				bumpScale: 1.0,
 				bumpMap: this.bdpBumpTexture,
 				name: 'bdpMaterial'
 			});
@@ -431,7 +441,7 @@ void main()
 				color: 0x000000,
 				metalness: 1,
 				roughness: 0.1,
-				bumpScale: 0.85,
+				bumpScale: 1.0,
 				bumpMap: this.BK62BumpTexture,
 				name: 'blackMetalMat'
 			});
@@ -440,7 +450,7 @@ void main()
 				map: this.dpBumpTexture,
 				metalness: 1,
 				roughness: 0.15,
-				bumpScale: 0.85,
+				bumpScale: 1.0,
 				bumpMap: this.bdpBumpTexture,
 				name: 'leopardMaterial'
 			});
@@ -448,7 +458,7 @@ void main()
 				color: 0xffffff,
 				metalness: 1,
 				roughness: 0.15,
-				bumpScale: 0.85,
+				bumpScale: 1.0,
 				bumpMap: this.dpBumpTexture,
 				name: 'dpMaterial'
 			});
@@ -456,32 +466,42 @@ void main()
 				color: 0x000000,
 				metalness: 1,
 				roughness: 0.15,
-				bumpScale: 0.85,
+				bumpScale: 1.0,
 				bumpMap: this.BK62BumpTexture,
 				name: 'Bk62Mat'
 			});
+
+			// const geo = new PlaneGeometry(64, 64);
+			// const material = new MeshStandardMaterial({
+			// 	map: contactShadow,
+			// 	alphaMap: contactShadow
+			// });
+			// const mesh = new Mesh(geo, material);
+			// mesh.rotateX(3.14 / 2);
+			// this.scene.add(mesh);
+			// const mesh = new Mesh(contactShadowMesh)
 
 			console.log('debug: textures loaded');
 		});
 
 		await Promise.all([
-			hdrLoader.loadAsync(`${PUBLIC_CDN}/hdrs/spruit_sunrise_1k.hdr`).then((envMap) => {
+			hdrLoader.loadAsync(`${PUBLIC_CDN}/hdrs/kloppenheim_06_puresky_1k.hdr`).then((envMap) => {
 				envMap.mapping = EquirectangularReflectionMapping;
 				this.scene.environment = envMap;
-			}),
-			this.ktx2Loader.loadAsync('./ldrs/ktx2/spruit_sunrise_2k.ktx2').then((skyboxTexture) => {
-				const skybox = new GroundedSkybox(skyboxTexture, 10, 256, 256);
-				skyboxTexture.flipY = true;
-				skybox.position.y = 4.25;
-				skybox.rotateY(2.1);
-				this.scene.add(skybox);
-				skybox.traverse((o) => {
-					if (o instanceof Mesh) {
-						o.castShadow = false;
-						o.receiveShadow = false;
-					}
-				});
 			})
+			// this.ktx2Loader.loadAsync('./ldrs/ktx2/spruit_sunrise_2k.ktx2').then((skyboxTexture) => {
+			// 	const skybox = new GroundedSkybox(skyboxTexture, 10, 256, 256);
+			// 	skyboxTexture.flipY = true;
+			// 	skybox.position.y = 4.25;
+			// 	skybox.rotateY(2.1);
+			// 	this.scene.add(skybox);
+			// 	skybox.traverse((o) => {
+			// 		if (o instanceof Mesh) {
+			// 			o.castShadow = false;
+			// 			o.receiveShadow = false;
+			// 		}
+			// 	});
+			// })
 		]).then(() => {
 			this.texturesLoaded = true;
 			console.log('hdrs loaded');
@@ -502,10 +522,11 @@ void main()
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorFlatHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/shortGladiatorDomedHatch.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/longGladiatorDomedHatch.gltf'),
-			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/pup_extras_gltfpack.glb`)
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/pup_extras_gltfpack.glb`),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-base.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt1200.gltf'),
 			// this.loader.loadAsync('./models/seperate-models/truckslide-xt2000.gltf')
+			this.loader.loadAsync(`${PUBLIC_CDN}/seperate-models/gltfpack/shadow_gltfpack.glb`)
 		])
 			.then(
 				([
@@ -523,10 +544,11 @@ void main()
 					// longGladFHData,
 					// shortGladDHData,
 					// longGladDHData,
-					PupExtrasData
+					PupExtrasData,
 					// TSBaseData,
 					// TSData1200,
 					// TSData2000
+					contactShadow
 				]) => {
 					this.TruckModel = this.#setupModel(truckData);
 					// this.GullwingModel = this.#setupModel(gullwingData);
@@ -547,6 +569,8 @@ void main()
 					// this.XT1200Truckslide = this.#setupModel(TSData1200);
 					// this.XT2000Truckslide = this.#setupModel(TSData2000);
 
+					const shadow = this.#setupModel(contactShadow);
+
 					// Load them into the scene
 					let models = [
 						this.TruckModel,
@@ -563,10 +587,11 @@ void main()
 						// this.longGladiatorFH,
 						// this.shortGladiatorDH,
 						// this.longGladiatorDH,
-						this.PupAccessories
+						this.PupAccessories,
 						// this.XTBase,
 						// this.XT1200Truckslide,
-						// this.XT2000Truckslide
+						// this.XT2000Truckslide,
+						shadow
 					];
 
 					for (const model of models) {
@@ -601,19 +626,30 @@ void main()
 								child.geometry.name = 'lidMaterial';
 							}
 							// truck materials setup
-							else if (child.material && child.material.name === 'windowglass.001') {
+							else if (child.material && child.material.name === 'windowglass.002') {
 								child.material = this.windowMat;
-							} else if (child.material && child.material.name === 'redglass.001') {
+							} else if (child.material && child.material.name === 'redglass.002') {
 								child.material = this.redGlassMat;
-							} else if (child.material && child.material.name === 'clearglass.001') {
+							} else if (child.material && child.material.name === 'clearglass.002') {
 								child.material = this.clearGlassMatLights;
-							} else if (child.material && child.material.name === 'Carpaint') {
+							} else if (child.material && child.material.name === 'Carpaint.001') {
 								child.material = this.truckPaintMat;
+							}
+
+							// shadow alpha map
+							else if (child.material && child.material.name === 'shadow') {
+								child.material.alphaMap = this.contactShadowAlphaMap;
 							}
 						}
 
 						child.castShadow = true;
 						child.receiveShadow = true;
+					});
+
+					this.TruckModel.traverse((child) => {
+						if (child instanceof Mesh) {
+							console.log(child);
+						}
 					});
 
 					console.log('debug: scene traversed and materials set');
@@ -2415,7 +2451,7 @@ void main()
 		if (this.shortGladiatorFH) {
 			gsap.to(this.shortGladiatorFH.getObjectByName('short-hatch-gladiator')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-15 / 360),
+				z: 2 * Math.PI * (-15 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2423,7 +2459,7 @@ void main()
 		if (this.longGladiatorFH) {
 			gsap.to(this.longGladiatorFH.getObjectByName('gladiator-long-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-10 / 360),
+				z: 2 * Math.PI * (-10 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2431,7 +2467,7 @@ void main()
 		if (this.longGladiatorDH) {
 			gsap.to(this.longGladiatorDH.getObjectByName('gladiator-long-dome-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-10 / 360),
+				z: 2 * Math.PI * (-10 / 360),
 				ease: 'expo'
 			});
 		}
@@ -2439,7 +2475,7 @@ void main()
 		if (this.shortGladiatorDH) {
 			gsap.to(this.shortGladiatorDH.getObjectByName('gladiator-short-domed-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (-15 / 360),
+				z: 2 * Math.PI * (-15 / 360),
 				ease: 'expo'
 			});
 		}
