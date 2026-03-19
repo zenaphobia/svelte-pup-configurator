@@ -271,16 +271,16 @@
 	];
 
 	let isHidden = $state(false);
-
-	$inspect({ color: configurator.truckColor });
+	let ref: HTMLElement | undefined = $state();
 </script>
 
 <aside
+	bind:this={ref}
 	class={twMerge(
-		'absolute flex flex-col gap-2 -bottom-full left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all bg-gray-200 w-1/2 max-w-[600px]',
-		selectedItemContext.context && 'bottom-4',
-		isHidden && '-bottom-[198px]'
+		'absolute flex flex-col gap-2 -bottom-full left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow',
+		selectedItemContext.context && 'bottom-4'
 	)}
+	style={`bottom: -${isHidden && ref ? ref.clientHeight : -16}px`}
 >
 	<div class="absolute left-1/2 -translate-x-1/2 -top-6">
 		<TabbedButton
