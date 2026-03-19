@@ -1,38 +1,23 @@
-# sv
+# Summary
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This project focused on redesigning the product configurator to deliver a modern UI, a fully responsive mobile experience, and significantly improved performance
 
-## Creating a project
+The application was rebuilt using Svelte with TypeScript for a scalable and maintainable frontend architecture. All 3D assets were reprocessed through an optimization pipeline, leveraging gltfpack for geometry compression and KTX2 for texture optimization.
 
-If you're seeing this, you've probably already done this step. Congrats!
+These improvements resulted in a 63% reduction in draw calls (366 → 138) and a 75% decrease in initial asset payload (23.5 MB → 5.9 MB). As a result, the configurator now achieves consistent 60 FPS on mobile devices and stable 144 FPS on desktop, even under the most demanding configurations.
 
-```sh
-# create a new project in the current directory
-npx sv create
+Performance was approached holistically, focusing on reducing draw calls, minimizing texture memory usage, and dynamically scaling rendering quality based on device capabilities.
 
-# create a new project in my-app
-npx sv create my-app
-```
+# Mobile Specific Optimizations
 
-## Developing
+To ensure optimal performance across a wide range of devices, the application includes a dynamic profiling system that evaluates client hardware capabilities at runtime. Based on this assessment, it automatically adjusts rendering settings, such as selecting lower-resolution textures and reducing device pixel ratio (DPR) to maintain smooth performance without compromising visual quality.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+# Asset Delivery
 
-```sh
-npm run dev
+All assets are served through Cloudflare R2 object storage, enabling low-latency delivery and efficient streaming of 3D models and textures. This approach improves load times and ensures consistent performance across different geographic regions.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+# UI
 
-## Building
+The frontend was built as a Single Page Application (SPA) using Svelte, providing a fast, reactive UI with seamless, real-time synchronization between user interactions and the 3D scene.
 
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Custom icons and visual assets were created using Adobe Illustrator and Blender, supporting a cohesive and polished user experience.
