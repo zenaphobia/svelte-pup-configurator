@@ -273,47 +273,70 @@
 	let isHidden = $state(false);
 	let ref: HTMLElement | undefined = $state();
 
-	let interact = $state({
+	const interact = $state({
 		is_active: false,
 		start: 0,
 		delta: 0,
-		isHoldingMouseDown: false,
-		reset: () => {
-			interact.delta = 0;
-			interact.start = 0;
+		reset() {
+			this.start = 0;
+			this.delta = 0;
 		}
 	});
+
+	$inspect({ interact });
+
+	function getRefInt(el: HTMLElement | undefined, ctx: typeof selectedItemContext) {
+		if (!el || !selectedItemContext.context) return -16;
+
+		return -el.clientHeight - 16;
+	}
+
+	function getYPos() {
+		if (!selectedItemContext.context) return -16;
+
+		const height = ref?.clientHeight ?? 0;
+		const closedY = -16;
+		const openY = -height - 16;
+
+		if (interact.is_active) {
+			// base position depends on current state
+			const base = isHidden ? closedY : openY;
+			const next = base - interact.delta;
+
+			// clamp so it doesn't drag too far either direction
+			return Math.max(openY, Math.min(closedY, next));
+		}
+
+		return isHidden ? closedY : openY;
+	}
 </script>
 
 <svelte:window
 	onpointerdown={(e) => {
-		if (e.target) {
-			const el = e.target as HTMLElement;
-			if (el.id !== 'interactive-item') return;
+		const el = e.target as HTMLElement;
+		if (el.id !== 'interactive-item') return;
 
-			interact.is_active = true;
-			interact.start = e.clientY;
-			interact.isHoldingMouseDown = true;
-		}
+		interact.is_active = true;
+		interact.start = e.clientY;
+		interact.delta = 0;
 	}}
 	onpointermove={(e) => {
-		if (interact.is_active) {
-			interact.delta = interact.start - e.clientY;
+		if (!interact.is_active) return;
 
-			if (interact.delta <= -50) {
-				interact.is_active = false;
-				isHidden = true;
-				interact.reset();
-			} else if (interact.delta >= 50) {
-				interact.is_active = false;
-				isHidden = false;
-				interact.reset();
-			}
-		}
+		interact.delta = interact.start - e.clientY;
 	}}
 	onpointerup={() => {
+		if (!interact.is_active) return;
+
+		const threshold = 50;
+
+		if (interact.delta >= threshold) {
+			isHidden = false;
+		} else if (interact.delta <= -threshold) {
+			isHidden = true;
+		}
+
 		interact.is_active = false;
-		interact.isHoldingMouseDown = false;
 		interact.reset();
 	}}
 />
@@ -321,11 +344,11 @@
 <aside
 	bind:this={ref}
 	class={twMerge(
-		'absolute flex flex-col gap-2 -bottom-full left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow',
-		selectedItemContext.context && 'bottom-4',
+		'relative flex flex-col gap-2 left-1/2 p-4 rounded-lg transition-all opacity-0 bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow',
+		selectedItemContext.context && 'opacity-100',
 		interact.is_active && 'transition-none'
 	)}
-	style={`bottom: -${isHidden && ref ? ref.clientHeight : -16}px; transform: translateY(${interact.is_active ? -interact.delta : 0}px)`}
+	style={`transform: translateX(-50%) translateY(${getYPos(interact, isHidden, selectedItemContext)}px)`}
 >
 	<div class="absolute left-1/2 -translate-x-1/2 -top-6">
 		<TabbedButton id="interactive-item" active={isHidden} style="fill-gray-200 stroke-gray-200" />

@@ -28,7 +28,6 @@
 		}
 	}}
 />
-
 {#if configurator}
 	<Loader loaded={configurator.loaded} progress={configurator.progress} />
 
@@ -39,15 +38,12 @@
 	{/if}
 {/if}
 
-<div class="overflow-hidden w-screen h-screen">
+<main class="w-full h-full overflow-hidden">
 	<canvas bind:this={canvas} id="myCanvas" class="block"></canvas>
-</div>
-
-{#if configurator}
-	<Sidebar {configurator} />
-	{#key selectedItemContext.context?.name}
-		<div in:fly={{ duration: 200, y: 20 }} out:fade={{ duration: 200 }}>
+	{#if configurator}
+		<Sidebar {configurator} />
+		{#key selectedItemContext.context?.name}
 			<SelectedItem {configurator} />
-		</div>
-	{/key}
-{/if}
+		{/key}
+	{/if}
+</main>

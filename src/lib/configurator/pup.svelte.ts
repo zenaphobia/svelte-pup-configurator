@@ -57,6 +57,7 @@ import { getInitial3DProfile } from '$lib';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { PUBLIC_CDN } from '$env/static/public';
 import { rotate } from 'three/tsl';
+import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
@@ -1074,16 +1075,16 @@ export class PupConfigurator {
 		}
 	}
 
-	enableOrbitControls() {
-		const id = crypto.randomUUID();
-		this.latestControlID = id;
-		if (this.latestControlID === id) {
-			this.controls.enabled = true;
-		}
-	}
+	// enableOrbitControls() {
+	// 	const id = pseudoUUID();
+	// 	this.latestControlID = id;
+	// 	if (this.latestControlID === id) {
+	// 		this.controls.enabled = true;
+	// 	}
+	// }
 
 	registerOrbitControls() {
-		const id = crypto.randomUUID() as string;
+		const id = pseudoUUID();
 		this.latestControlID = id;
 
 		return [

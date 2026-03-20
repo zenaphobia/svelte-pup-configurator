@@ -45,3 +45,10 @@ export async function buildRotatedEnv(
 
 	return texture; // THREE.Texture (cubeUV format), ready for scene.environment
 }
+
+export function pseudoUUID() {
+	const time = Date.now().toString(36);
+	const random = Math.random().toString(36).slice(2, 10);
+
+	return `${time}-${random}`;
+}

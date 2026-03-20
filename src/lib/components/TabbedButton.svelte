@@ -20,7 +20,7 @@
 		/>
 
 		<g id="interactive-item" class={active ? 'chevron-group open' : 'chevron-group'}>
-			<path fill="black" d="M 65 10 L 75 20 L 55 20 Z" />
+			<path id="interactive-item" fill="black" d="M 65 10 L 75 20 L 55 20 Z" />
 		</g>
 	</svg>
 </button>
