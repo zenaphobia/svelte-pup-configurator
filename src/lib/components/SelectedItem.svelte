@@ -272,24 +272,63 @@
 
 	let isHidden = $state(false);
 	let ref: HTMLElement | undefined = $state();
+
+	let interact = $state({
+		is_active: false,
+		start: 0,
+		delta: 0,
+		isHoldingMouseDown: false,
+		reset: () => {
+			interact.delta = 0;
+			interact.start = 0;
+		}
+	});
 </script>
+
+<svelte:window
+	onpointerdown={(e) => {
+		if (e.target) {
+			const el = e.target as HTMLElement;
+			if (el.id !== 'interactive-item') return;
+
+			interact.is_active = true;
+			interact.start = e.clientY;
+			interact.isHoldingMouseDown = true;
+		}
+	}}
+	onpointermove={(e) => {
+		if (interact.is_active) {
+			interact.delta = interact.start - e.clientY;
+
+			if (interact.delta <= -50) {
+				interact.is_active = false;
+				isHidden = true;
+				interact.reset();
+			} else if (interact.delta >= 50) {
+				interact.is_active = false;
+				isHidden = false;
+				interact.reset();
+			}
+		}
+	}}
+	onpointerup={() => {
+		interact.is_active = false;
+		interact.isHoldingMouseDown = false;
+		interact.reset();
+	}}
+/>
 
 <aside
 	bind:this={ref}
 	class={twMerge(
 		'absolute flex flex-col gap-2 -bottom-full left-1/2 -translate-x-1/2 p-4 rounded-lg transition-all bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow',
-		selectedItemContext.context && 'bottom-4'
+		selectedItemContext.context && 'bottom-4',
+		interact.is_active && 'transition-none'
 	)}
-	style={`bottom: -${isHidden && ref ? ref.clientHeight : -16}px`}
+	style={`bottom: -${isHidden && ref ? ref.clientHeight : -16}px; transform: translateY(${interact.is_active ? -interact.delta : 0}px)`}
 >
 	<div class="absolute left-1/2 -translate-x-1/2 -top-6">
-		<TabbedButton
-			onclick={() => {
-				isHidden = !isHidden;
-			}}
-			active={isHidden}
-			style="fill-gray-200 stroke-gray-200"
-		/>
+		<TabbedButton id="interactive-item" active={isHidden} style="fill-gray-200 stroke-gray-200" />
 	</div>
 	<div class="space-y-1">
 		<p class="font-header text-2xl font-bold">
