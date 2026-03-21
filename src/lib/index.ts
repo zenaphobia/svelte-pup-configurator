@@ -6,8 +6,10 @@ type DeviceProile = {
 };
 
 export function getInitial3DProfile(gl: WebGLRenderingContext): DeviceProile {
-	const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-	const smallScreen = window.matchMedia('(max-width: 900px)').matches;
+	const ua = navigator.userAgent;
+	const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+	const isSmallScreen = window.innerWidth <= 900;
+	const isMobileUA = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
 	const dpr = window.devicePixelRatio || 1;
 	const mem = navigator.deviceMemory ?? 4;
 	const cores = navigator.hardwareConcurrency ?? 4;
@@ -15,7 +17,7 @@ export function getInitial3DProfile(gl: WebGLRenderingContext): DeviceProile {
 	const effectiveType = navigator.connection?.effectiveType ?? '4g';
 	const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
 
-	const probablyMobile = coarsePointer || smallScreen;
+	const probablyMobile = isMobileUA || isTouch || isSmallScreen;
 
 	let tier: DeviceProile['tier'] = 'high';
 

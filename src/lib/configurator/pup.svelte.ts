@@ -57,6 +57,7 @@ import { getInitial3DProfile } from '$lib';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { PUBLIC_CDN } from '$env/static/public';
 import { rotate } from 'three/tsl';
+import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
@@ -235,8 +236,13 @@ export class PupConfigurator {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = ACESFilmicToneMapping;
 		this.renderer.toneMappingExposure = 1; //If you enable sao, turn to 2
-		this.renderer.shadowMap.enabled = true;
+		// this.renderer.shadowMap.enabled = true;
 		// this.renderer.shadowMap.type = PCFSoftShadowMap;
+
+		if (this.deviceProfile.probablyMobile) {
+			this.camera.fov = 60;
+			this.camera.updateProjectionMatrix();
+		}
 
 		// Draco Loader
 		this.dracoLoader = new DRACOLoader();
@@ -1074,16 +1080,16 @@ export class PupConfigurator {
 		}
 	}
 
-	enableOrbitControls() {
-		const id = crypto.randomUUID();
-		this.latestControlID = id;
-		if (this.latestControlID === id) {
-			this.controls.enabled = true;
-		}
-	}
+	// enableOrbitControls() {
+	// 	const id = pseudoUUID();
+	// 	this.latestControlID = id;
+	// 	if (this.latestControlID === id) {
+	// 		this.controls.enabled = true;
+	// 	}
+	// }
 
 	registerOrbitControls() {
-		const id = crypto.randomUUID() as string;
+		const id = pseudoUUID();
 		this.latestControlID = id;
 
 		return [
