@@ -236,8 +236,13 @@ export class PupConfigurator {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = ACESFilmicToneMapping;
 		this.renderer.toneMappingExposure = 1; //If you enable sao, turn to 2
-		this.renderer.shadowMap.enabled = true;
+		// this.renderer.shadowMap.enabled = true;
 		// this.renderer.shadowMap.type = PCFSoftShadowMap;
+
+		if (this.deviceProfile.probablyMobile) {
+			this.camera.fov = 60;
+			this.camera.updateProjectionMatrix();
+		}
 
 		// Draco Loader
 		this.dracoLoader = new DRACOLoader();
