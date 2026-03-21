@@ -8,10 +8,6 @@ class SelectedItem {
 }
 
 export const informationText = {
-	'Ladder Rack': {
-		description:
-			'Save space in your truck be by storing your ladders and other light materials above the cab. Easily removable when not in use.'
-	},
 	'Headache Rack': {
 		description:
 			'Whether you want added protection for your rear window or to gain overhead storage a headache rack is the perfect add on.',
@@ -25,6 +21,10 @@ export const informationText = {
 				description: '3rd brakelight camera compatible.'
 			}
 		}
+	},
+	'Ladder Rack': {
+		description:
+			'Save space in your truck be by storing your ladders and other light materials above the cab. Easily removable when not in use.'
 	},
 	Hatch: {
 		type: 'multi',
@@ -84,7 +84,7 @@ export const informationText = {
 			'Light up your compartment for late night jobs and better visibility. Can be applied to all boxes, and hatches.',
 		options: [{ name: 'LED lights' }, { name: 'No lights' }]
 	},
-	AdditionalTrays: {
+	'Additional Trays': {
 		description:
 			'Each box comes standard with a single removable tray. Add additional trays to keep your small parts and tools organized.'
 	},
@@ -107,7 +107,7 @@ export function getIcon(item: string): string {
 			return './graphic-assets/icons/gullwing.svg';
 		case 'Truckslide':
 			return './graphic-assets/icons/truckslide.svg';
-		case 'AdditionalTrays':
+		case 'Additional Trays':
 			return './graphic-assets/icons/additional_trays.svg';
 		case 'Finish':
 			return './graphic-assets/icons/finish.svg';

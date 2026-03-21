@@ -248,7 +248,7 @@
 		LED: {
 			actions: additionalLightsActions
 		},
-		AdditionalTrays: {
+		'Additional Trays': {
 			actions: additionalTraysActions
 		},
 		'Truck Color': {

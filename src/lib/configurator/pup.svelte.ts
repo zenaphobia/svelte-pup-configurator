@@ -1349,7 +1349,7 @@ export class PupConfigurator {
 		// this.controls.target = this.cameraTracker.position;
 
 		this.openLowSideLid();
-		this.openGullwing();
+		// this.openGullwing();
 	}
 
 	additionalLightsSelect() {
@@ -1520,7 +1520,7 @@ export class PupConfigurator {
 	renderLowSideTrays(amount: number) {
 		this.openLowSideLid();
 		this.clientPUP.additionalLowsideTray = amount;
-		this.controls.enabled = false;
+		// this.controls.enabled = false;
 
 		switch (this.clientPUP.additionalLowsideTray) {
 			case 0:
