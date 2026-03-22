@@ -68,7 +68,7 @@
 	<div
 		class={[
 			'pointer-events-none absolute h-full top-0 left-1/2 -translate-x-1/2 transition-all',
-			gradient
+			!large.current && gradient
 		]}
 		style={`width: calc(100% - 16px)`}
 	></div>
