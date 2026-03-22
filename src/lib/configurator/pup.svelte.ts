@@ -61,6 +61,10 @@ import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
+const PROD = import.meta.env.CONTEXT === 'deploy-preview';
+
+console.log({ PROD });
+
 export class PupConfigurator {
 	// #region ThreeJS variables
 	private loader: GLTFLoader;
@@ -211,8 +215,11 @@ export class PupConfigurator {
 		this.scene = new Scene();
 		this.scene.background = new Color('#d9d9d9');
 		this.container = canvas;
-		this.stats.showPanel(0);
-		document.body.appendChild(this.stats.dom);
+
+		if (!PROD) {
+			this.stats.showPanel(0);
+			document.body.appendChild(this.stats.dom);
+		}
 
 		if (!this.container) {
 			throw new Error('No container for canvas');
