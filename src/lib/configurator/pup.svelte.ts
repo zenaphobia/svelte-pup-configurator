@@ -61,9 +61,7 @@ import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
-const PROD = import.meta.env.VITE_CONTEXT;
-
-console.log({ context: import.meta.env.VITE_CONTEXT });
+const PROD = import.meta.env.VITE_CONTEXT === 'production';
 
 export class PupConfigurator {
 	// #region ThreeJS variables
@@ -468,7 +466,7 @@ export class PupConfigurator {
 				name: 'Bk62Mat'
 			});
 
-			console.log('debug: textures loaded');
+			console.debug('debug: textures loaded');
 		});
 
 		await Promise.all([
@@ -491,7 +489,7 @@ export class PupConfigurator {
 			// })
 		]).then(() => {
 			this.texturesLoaded = true;
-			console.log('hdrs loaded');
+			console.debug('hdrs loaded');
 		});
 
 		await Promise.all([
@@ -633,7 +631,7 @@ export class PupConfigurator {
 						child.receiveShadow = true;
 					});
 
-					console.log('debug: scene traversed and materials set');
+					console.debug('debug: scene traversed and materials set');
 
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
 					// 	this.bdpMaterial;
@@ -703,11 +701,13 @@ export class PupConfigurator {
 					// this.plm?.clear();
 					this.modelsLoaded = true;
 
-					console.log('debug: models loaded');
+					console.debug('debug: models loaded');
 
-					setInterval(() => {
-						console.log(this.renderer.info);
-					}, 5000);
+					if (!PROD) {
+						setInterval(() => {
+							console.log(this.renderer.info);
+						}, 5000);
+					}
 				}
 			)
 			.catch((err) => {

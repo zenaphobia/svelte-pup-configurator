@@ -283,8 +283,6 @@
 		}
 	});
 
-	$inspect({ interact });
-
 	function getRefInt(el: HTMLElement | undefined, ctx: typeof selectedItemContext) {
 		if (!el || !selectedItemContext.context) return -16;
 

@@ -54,8 +54,6 @@
 	const large = new MediaQuery('min-width: 1200px');
 
 	let gradient = $state('gradient-r');
-
-	$inspect({ gradient });
 </script>
 
 <aside
