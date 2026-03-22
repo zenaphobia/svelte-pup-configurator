@@ -12,13 +12,13 @@
 	let { progress }: Props = $props();
 </script>
 
-<section
+<article
 	class="w-screen h-screen absolute left-0 top-0 z-[1000] flex justify-center items-center overflow-hidden"
 >
-	<div class="bg-white p-4 rounded-lg">
+	<div class="bg-white p-4 rounded-lg max-w-[80%] overflow-hidden">
 		<div
 			class={twMerge(
-				'bg-white border border-gray-900 w-[400px] h-[25px] transition-all rounded-md overflow-hidden duration-250 ease-out',
+				'bg-white border border-gray-900 w-[400px] max-w-[100%] h-[25px] transition-all rounded-md overflow-hidden duration-250 ease-out',
 				progress === 100 && 'border-[#e92027] rounded-[100px]'
 			)}
 		>
@@ -31,4 +31,4 @@
 			></div>
 		</div>
 	</div>
-</section>
+</article>

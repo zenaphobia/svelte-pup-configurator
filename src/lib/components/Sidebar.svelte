@@ -75,7 +75,7 @@
 	<div
 		onscroll={(e) => {
 			const el = e.target as HTMLElement;
-			const atStart = el.scrollLeft === 0;
+			const atStart = el.scrollLeft <= 0;
 			const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth;
 
 			if (atStart && !atEnd) {
