@@ -178,17 +178,17 @@
 		type: 'multi',
 		buttons: [
 			{
-				active: configurator.clientPUP.LED,
-				text: 'LED Lights',
-				action: () => {
-					configurator.renderLights();
-				}
-			},
-			{
 				active: !configurator.clientPUP.LED,
 				text: 'No lights',
 				action: () => {
 					configurator.disableLights();
+				}
+			},
+			{
+				active: configurator.clientPUP.LED,
+				text: 'LED Lights',
+				action: () => {
+					configurator.renderLights();
 				}
 			}
 		]
