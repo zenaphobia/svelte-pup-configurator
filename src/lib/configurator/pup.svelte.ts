@@ -204,7 +204,6 @@ export class PupConfigurator {
 		};
 		this.defaultLoadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
 			this.progress = 0;
-			// console.log(`Loading started: ItemsTotal: ${itemsTotal}`);
 		};
 
 		// Scene setup
@@ -1453,10 +1452,8 @@ export class PupConfigurator {
 			this.PupAccessories.getObjectByName('lowside-tray-2')!.visible === true &&
 			this.PupAccessories.getObjectByName('lowside-tray-3')!.visible === false
 		) {
-			console.log('returned 2');
 			return 2;
 		} else if (this.PupAccessories.getObjectByName('lowside-tray-3')!.visible === true) {
-			console.log('returned 3');
 			return 3;
 		} else {
 			return 1;
@@ -1656,7 +1653,7 @@ export class PupConfigurator {
 				this.GullwingModel.getObjectByName('GL-gw-right-lid')!.visible = true;
 				this.GullwingModel.getObjectByName('gw-decimated-left-lid')!.visible = false;
 				this.GullwingModel.getObjectByName('gw-decimated-right-lid')!.visible = false;
-				console.log('1. Gladiator Case');
+				console.debug('1. Gladiator Case');
 				if (this.LongFlatHatch.visible) {
 					this.LongFlatHatch.visible = false;
 					if (!this.ShortFlatHatch) {
@@ -1695,7 +1692,7 @@ export class PupConfigurator {
 			}
 			//If already added, replace gullwing meshes
 			else {
-				console.log('2. Gladiator Else case - Gullwing');
+				console.debug('2. Gladiator Else case - Gullwing');
 				this.ShortLowSides.getObjectByName('GL-left-lid')!.visible = true;
 				this.ShortLowSides.getObjectByName('GL-right-lid')!.visible = true;
 				this.GullwingModel.getObjectByName('GL-gw-left-lid')!.visible = true;
@@ -1745,7 +1742,7 @@ export class PupConfigurator {
 				}
 			}
 		} else {
-			console.log('3. Else case');
+			console.debug('3. Else case');
 			this.ShortLowSides.getObjectByName('GL-left-lid')!.visible = false;
 			this.ShortLowSides.getObjectByName('GL-right-lid')!.visible = false;
 			this.LongLowSides.getObjectByName('GL-ls-left-lid')!.visible = false;
