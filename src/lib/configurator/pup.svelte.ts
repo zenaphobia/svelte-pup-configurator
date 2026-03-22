@@ -61,6 +61,8 @@ import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
+const PROD = import.meta.env.VITE_CONTEXT === 'production';
+
 export class PupConfigurator {
 	// #region ThreeJS variables
 	private loader: GLTFLoader;
@@ -202,7 +204,6 @@ export class PupConfigurator {
 		};
 		this.defaultLoadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
 			this.progress = 0;
-			// console.log(`Loading started: ItemsTotal: ${itemsTotal}`);
 		};
 
 		// Scene setup
@@ -211,8 +212,11 @@ export class PupConfigurator {
 		this.scene = new Scene();
 		this.scene.background = new Color('#d9d9d9');
 		this.container = canvas;
-		this.stats.showPanel(0);
-		document.body.appendChild(this.stats.dom);
+
+		if (!PROD) {
+			this.stats.showPanel(0);
+			document.body.appendChild(this.stats.dom);
+		}
 
 		if (!this.container) {
 			throw new Error('No container for canvas');
@@ -461,7 +465,7 @@ export class PupConfigurator {
 				name: 'Bk62Mat'
 			});
 
-			console.log('debug: textures loaded');
+			console.debug('debug: textures loaded');
 		});
 
 		await Promise.all([
@@ -484,7 +488,7 @@ export class PupConfigurator {
 			// })
 		]).then(() => {
 			this.texturesLoaded = true;
-			console.log('hdrs loaded');
+			console.debug('hdrs loaded');
 		});
 
 		await Promise.all([
@@ -626,7 +630,7 @@ export class PupConfigurator {
 						child.receiveShadow = true;
 					});
 
-					console.log('debug: scene traversed and materials set');
+					console.debug('debug: scene traversed and materials set');
 
 					// (this.ShortFlatHatch.getObjectByName('Decimated_Hatch') as Mesh).material =
 					// 	this.bdpMaterial;
@@ -696,11 +700,13 @@ export class PupConfigurator {
 					// this.plm?.clear();
 					this.modelsLoaded = true;
 
-					console.log('debug: models loaded');
+					console.debug('debug: models loaded');
 
-					setInterval(() => {
-						console.log(this.renderer.info);
-					}, 5000);
+					if (!PROD) {
+						setInterval(() => {
+							console.log(this.renderer.info);
+						}, 5000);
+					}
 				}
 			)
 			.catch((err) => {
@@ -1349,7 +1355,7 @@ export class PupConfigurator {
 		// this.controls.target = this.cameraTracker.position;
 
 		this.openLowSideLid();
-		this.openGullwing();
+		// this.openGullwing();
 	}
 
 	additionalLightsSelect() {
@@ -1446,10 +1452,8 @@ export class PupConfigurator {
 			this.PupAccessories.getObjectByName('lowside-tray-2')!.visible === true &&
 			this.PupAccessories.getObjectByName('lowside-tray-3')!.visible === false
 		) {
-			console.log('returned 2');
 			return 2;
 		} else if (this.PupAccessories.getObjectByName('lowside-tray-3')!.visible === true) {
-			console.log('returned 3');
 			return 3;
 		} else {
 			return 1;
@@ -1520,7 +1524,7 @@ export class PupConfigurator {
 	renderLowSideTrays(amount: number) {
 		this.openLowSideLid();
 		this.clientPUP.additionalLowsideTray = amount;
-		this.controls.enabled = false;
+		// this.controls.enabled = false;
 
 		switch (this.clientPUP.additionalLowsideTray) {
 			case 0:
@@ -1649,7 +1653,7 @@ export class PupConfigurator {
 				this.GullwingModel.getObjectByName('GL-gw-right-lid')!.visible = true;
 				this.GullwingModel.getObjectByName('gw-decimated-left-lid')!.visible = false;
 				this.GullwingModel.getObjectByName('gw-decimated-right-lid')!.visible = false;
-				console.log('1. Gladiator Case');
+				console.debug('1. Gladiator Case');
 				if (this.LongFlatHatch.visible) {
 					this.LongFlatHatch.visible = false;
 					if (!this.ShortFlatHatch) {
@@ -1688,7 +1692,7 @@ export class PupConfigurator {
 			}
 			//If already added, replace gullwing meshes
 			else {
-				console.log('2. Gladiator Else case - Gullwing');
+				console.debug('2. Gladiator Else case - Gullwing');
 				this.ShortLowSides.getObjectByName('GL-left-lid')!.visible = true;
 				this.ShortLowSides.getObjectByName('GL-right-lid')!.visible = true;
 				this.GullwingModel.getObjectByName('GL-gw-left-lid')!.visible = true;
@@ -1738,7 +1742,7 @@ export class PupConfigurator {
 				}
 			}
 		} else {
-			console.log('3. Else case');
+			console.debug('3. Else case');
 			this.ShortLowSides.getObjectByName('GL-left-lid')!.visible = false;
 			this.ShortLowSides.getObjectByName('GL-right-lid')!.visible = false;
 			this.LongLowSides.getObjectByName('GL-ls-left-lid')!.visible = false;
@@ -2484,7 +2488,7 @@ export class PupConfigurator {
 		if (this.shortGladiatorFH) {
 			gsap.to(this.shortGladiatorFH.getObjectByName('short-hatch-gladiator')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2493,7 +2497,7 @@ export class PupConfigurator {
 		if (this.longGladiatorFH) {
 			gsap.to(this.longGladiatorFH.getObjectByName('gladiator-long-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2502,7 +2506,7 @@ export class PupConfigurator {
 		if (this.longGladiatorDH) {
 			gsap.to(this.longGladiatorDH.getObjectByName('gladiator-long-dome-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2511,7 +2515,7 @@ export class PupConfigurator {
 		if (this.shortGladiatorDH) {
 			gsap.to(this.shortGladiatorDH.getObjectByName('gladiator-short-domed-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2565,6 +2569,7 @@ export class PupConfigurator {
 		}
 
 		const meshes: Mesh[] = [];
+		const accent = material.name === 'dpMaterial' ? this.metalMat : this.blackMetalMat;
 
 		obj.traverse((child) => {
 			if (child instanceof Mesh) {
@@ -2578,7 +2583,13 @@ export class PupConfigurator {
 		}
 
 		meshes.forEach((mesh) => {
-			mesh.material = material;
+			if (mesh.geometry.name === 'lidMaterial') {
+				mesh.material = material;
+			}
+
+			if (mesh.geometry.name === 'accentColor') {
+				mesh.material = accent;
+			}
 		});
 	}
 
