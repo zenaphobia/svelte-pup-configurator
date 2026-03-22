@@ -32,7 +32,8 @@ import {
 	Vector3,
 	WebGLRenderer,
 	WireframeGeometry,
-	type Object3DEventMap
+	type Object3DEventMap,
+	PCFSoftShadowMap
 } from 'three';
 
 import {
@@ -75,7 +76,7 @@ export class PupConfigurator {
 	private dracoLoader: DRACOLoader;
 	private ktx2Loader: KTX2Loader;
 	private testLight: SpotLight;
-	private shadowLight: DirectionalLight;
+	// private shadowLight: DirectionalLight;
 	// private shadowLightHelper: DirectionalLightHelper;
 
 	// #region Truck & PUP Models
@@ -177,7 +178,7 @@ export class PupConfigurator {
 	private shadowsLoaded = $state(false);
 	// Triggered by loading models/textures outside of the starting default configuration
 	#loadingExtraData = $state(false);
-	#loadingExtraDataTimeout: number | null = null;
+	#loadingExtraDataTimeout: NodeJS.Timeout | null = null;
 	loaded = $derived.by(() => {
 		if (this.texturesLoaded && this.modelsLoaded) {
 			return true;
@@ -240,8 +241,9 @@ export class PupConfigurator {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.toneMapping = ACESFilmicToneMapping;
 		this.renderer.toneMappingExposure = 1; //If you enable sao, turn to 2
-		// this.renderer.shadowMap.enabled = true;
-		// this.renderer.shadowMap.type = PCFSoftShadowMap;
+		this.renderer.shadowMap.enabled = true;
+		this.renderer.shadowMap.type = PCFSoftShadowMap;
+		this.renderer.shadowMap.needsUpdate = true;
 
 		if (this.deviceProfile.probablyMobile) {
 			this.camera.fov = 60;
@@ -331,21 +333,6 @@ export class PupConfigurator {
 		this.testLight.castShadow = true;
 		this.testLight.target = this.lightTracker;
 		this.scene.add(this.testLight);
-
-		// Add in shadow Light
-		this.shadowLight = new DirectionalLight(0xffffff, 0);
-		this.shadowLight.target = this.cameraTracker;
-		this.shadowLight.position.set(
-			this.lightParams.position.x,
-			this.lightParams.position.y,
-			this.lightParams.position.z
-		);
-		this.shadowLight.castShadow = true;
-		this.scene.add(this.shadowLight);
-
-		// for debug
-		// this.shadowLightHelper = new DirectionalLightHelper(this.shadowLight, 10, 0xff0000);
-		// this.scene.add(this.shadowLightHelper);
 
 		const lp = new SphereGeometry(15, 24, 24);
 		const lpm = new MeshBasicMaterial({
@@ -926,76 +913,76 @@ export class PupConfigurator {
 		}
 	}
 
-	addPlmGui(gui: GUI) {
-		const shFolder = gui.addFolder('Shadow Material');
-		shFolder.open();
-		shFolder.add(this.shadowParams, 'opacity', 0, 1).onChange((v) => {
-			this.shadowMaterial!.opacity = v;
-		});
-		shFolder.add(this.shadowParams, 'alphaTest', 0, 1).onChange((v) => {
-			this.shadowMaterial!.alphaTest = v;
-		});
-		// shFolder.addColor(this.shadowMaterial, 'color');
-		// shFolder.add(this.shadowMaterial, 'blend', 0, 3);
+	// addPlmGui(gui: GUI) {
+	// 	const shFolder = gui.addFolder('Shadow Material');
+	// 	shFolder.open();
+	// 	shFolder.add(this.shadowParams, 'opacity', 0, 1).onChange((v) => {
+	// 		this.shadowMaterial!.opacity = v;
+	// 	});
+	// 	shFolder.add(this.shadowParams, 'alphaTest', 0, 1).onChange((v) => {
+	// 		this.shadowMaterial!.alphaTest = v;
+	// 	});
+	// 	// shFolder.addColor(this.shadowMaterial, 'color');
+	// 	// shFolder.add(this.shadowMaterial, 'blend', 0, 3);
 
-		const folder = gui.addFolder('Shadow params');
-		folder.open();
-		folder.add(this.shadowParams, 'temporal');
-		// folder.add(this.shadowCount, 'toString()').listen().disable();
+	// 	const folder = gui.addFolder('Shadow params');
+	// 	folder.open();
+	// 	folder.add(this.shadowParams, 'temporal');
+	// 	// folder.add(this.shadowCount, 'toString()').listen().disable();
 
-		const tempObject = {
-			reComputeShadows: () => {
-				this.resetShadows();
-			} // to make a button in gui
-		};
-		folder.add(tempObject, 'reComputeShadows').name('Re compute ⚡');
+	// 	const tempObject = {
+	// 		reComputeShadows: () => {
+	// 			this.resetShadows();
+	// 		} // to make a button in gui
+	// 	};
+	// 	folder.add(tempObject, 'reComputeShadows').name('Re compute ⚡');
 
-		folder.add(this.shadowParams, 'frames', 2, 100, 1).onFinishChange(() => {
-			this.resetShadows();
-		});
-		folder
-			.add(this.shadowParams, 'scale', 0.5, 100)
-			.onChange((v: number) => {
-				this.gPlane!.scale.setScalar(v);
-			})
-			.onFinishChange(() => {
-				this.resetShadows();
-			});
+	// 	folder.add(this.shadowParams, 'frames', 2, 100, 1).onFinishChange(() => {
+	// 		this.resetShadows();
+	// 	});
+	// 	folder
+	// 		.add(this.shadowParams, 'scale', 0.5, 100)
+	// 		.onChange((v: number) => {
+	// 			this.gPlane!.scale.setScalar(v);
+	// 		})
+	// 		.onFinishChange(() => {
+	// 			this.resetShadows();
+	// 		});
 
-		folder.add(this.lightParams, 'radius', 0.1, 5).onFinishChange(() => {
-			this.resetShadows();
-		});
-		folder.add(this.lightParams, 'ambient', 0, 1).onFinishChange(() => {
-			this.resetShadows();
-		});
+	// 	folder.add(this.lightParams, 'radius', 0.1, 5).onFinishChange(() => {
+	// 		this.resetShadows();
+	// 	});
+	// 	folder.add(this.lightParams, 'ambient', 0, 1).onFinishChange(() => {
+	// 		this.resetShadows();
+	// 	});
 
-		const bulbFolder = gui.addFolder('💡 Light source');
-		bulbFolder.open();
-		bulbFolder
-			.add(this.lightParams.position, 'x', -100, 100)
-			.name('Light Direction X')
-			.onFinishChange(() => {
-				this.resetShadows();
-				this.shadowLight.position.setX(this.lightParams.position.x);
-				this.shadowLight.target = this.cameraTracker;
-			});
-		bulbFolder
-			.add(this.lightParams.position, 'y', 1, 30)
-			.name('Light Direction Y')
-			.onFinishChange(() => {
-				this.resetShadows();
-				this.shadowLight.position.setY(this.lightParams.position.y);
-				this.shadowLight.target = this.cameraTracker;
-			});
-		bulbFolder
-			.add(this.lightParams.position, 'z', -100, 100)
-			.name('Light Direction Z')
-			.onFinishChange(() => {
-				this.resetShadows();
-				this.shadowLight.position.setZ(this.lightParams.position.z);
-				this.shadowLight.target = this.cameraTracker;
-			});
-	}
+	// 	const bulbFolder = gui.addFolder('💡 Light source');
+	// 	bulbFolder.open();
+	// 	bulbFolder
+	// 		.add(this.lightParams.position, 'x', -100, 100)
+	// 		.name('Light Direction X')
+	// 		.onFinishChange(() => {
+	// 			this.resetShadows();
+	// 			this.shadowLight.position.setX(this.lightParams.position.x);
+	// 			this.shadowLight.target = this.cameraTracker;
+	// 		});
+	// 	bulbFolder
+	// 		.add(this.lightParams.position, 'y', 1, 30)
+	// 		.name('Light Direction Y')
+	// 		.onFinishChange(() => {
+	// 			this.resetShadows();
+	// 			this.shadowLight.position.setY(this.lightParams.position.y);
+	// 			this.shadowLight.target = this.cameraTracker;
+	// 		});
+	// 	bulbFolder
+	// 		.add(this.lightParams.position, 'z', -100, 100)
+	// 		.name('Light Direction Z')
+	// 		.onFinishChange(() => {
+	// 			this.resetShadows();
+	// 			this.shadowLight.position.setZ(this.lightParams.position.z);
+	// 			this.shadowLight.target = this.cameraTracker;
+	// 		});
+	// }
 
 	private assignMaterialsToObject(model: Group<Object3DEventMap>) {
 		const accentMaterial = this.getAccentMaterial(this.clientPUP.finish);
@@ -1397,11 +1384,11 @@ export class PupConfigurator {
 		}
 
 		if (this.clientPUP.LED) {
-			gsap.to(this.testLight, { duration: 2, intensity: 10000, ease: 'expo' });
+			gsap.to(this.testLight, { duration: 1, intensity: 10000, ease: 'expo' });
 		}
 
-		gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
-		gsap.to(this.renderer, { duration: 2, toneMappingExposure: 0.15, ease: 'expo' });
+		// gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
+		gsap.to(this.renderer, { duration: 1, toneMappingExposure: 0.15, ease: 'expo' });
 
 		// this.controls.target = this.cameraTracker.position;
 
@@ -1474,7 +1461,7 @@ export class PupConfigurator {
 		}
 
 		gsap.to(this.testLight, { duration: 1, intensity: 10000, ease: 'expo' });
-		gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
+		// gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
 
 		this.LongLowSides.getObjectByName('Shape_IndexedFaceSet095')!.visible = true;
 	}
