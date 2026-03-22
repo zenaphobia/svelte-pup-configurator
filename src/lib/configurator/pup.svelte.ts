@@ -2491,7 +2491,7 @@ export class PupConfigurator {
 		if (this.shortGladiatorFH) {
 			gsap.to(this.shortGladiatorFH.getObjectByName('short-hatch-gladiator')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2500,7 +2500,7 @@ export class PupConfigurator {
 		if (this.longGladiatorFH) {
 			gsap.to(this.longGladiatorFH.getObjectByName('gladiator-long-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2509,7 +2509,7 @@ export class PupConfigurator {
 		if (this.longGladiatorDH) {
 			gsap.to(this.longGladiatorDH.getObjectByName('gladiator-long-dome-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2518,7 +2518,7 @@ export class PupConfigurator {
 		if (this.shortGladiatorDH) {
 			gsap.to(this.shortGladiatorDH.getObjectByName('gladiator-short-domed-hatch')!.rotation, {
 				duration: 2,
-				y: 2 * Math.PI * (0 / 360),
+				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
 				delay: 1
 			});
@@ -2572,6 +2572,7 @@ export class PupConfigurator {
 		}
 
 		const meshes: Mesh[] = [];
+		const accent = material.name === 'dpMaterial' ? this.metalMat : this.blackMetalMat;
 
 		obj.traverse((child) => {
 			if (child instanceof Mesh) {
@@ -2585,7 +2586,13 @@ export class PupConfigurator {
 		}
 
 		meshes.forEach((mesh) => {
-			mesh.material = material;
+			if (mesh.geometry.name === 'lidMaterial') {
+				mesh.material = material;
+			}
+
+			if (mesh.geometry.name === 'accentColor') {
+				mesh.material = accent;
+			}
 		});
 	}
 

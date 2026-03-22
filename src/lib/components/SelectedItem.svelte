@@ -342,7 +342,7 @@
 <aside
 	bind:this={ref}
 	class={twMerge(
-		'relative flex flex-col gap-2 left-1/2 p-4 rounded-lg transition-all opacity-0 bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow',
+		'relative flex flex-col gap-2 left-1/2 p-4 rounded-lg transition-all opacity-0 bg-gray-200 w-[90%] lg:max-w-[600px] border border-gray-300 shadow-sm',
 		selectedItemContext.context && 'opacity-100',
 		interact.is_active && 'transition-none'
 	)}
@@ -355,7 +355,7 @@
 		<p class="font-header text-2xl font-bold">
 			{selectedItemContext.context?.name}
 		</p>
-		<p class="font-body text-xs text-pretty">
+		<p class="font-body text-xs text-pretty opacity-75 my-2">
 			{selectedItemContext.context?.description}
 		</p>
 	</div>
