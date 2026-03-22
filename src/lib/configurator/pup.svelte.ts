@@ -61,9 +61,9 @@ import { pseudoUUID } from './utils.js';
 
 type TruckColor = 'gray' | 'blue' | 'red' | 'black' | 'white';
 
-const PROD = import.meta.env.CONTEXT === 'deploy-preview';
+const PROD = import.meta.env.VITE_CONTEXT;
 
-console.log({ PROD });
+console.log({ context: import.meta.env.VITE_CONTEXT });
 
 export class PupConfigurator {
 	// #region ThreeJS variables

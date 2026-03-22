@@ -1,0 +1,8 @@
+[build.environment]
+  VITE_CONTEXT = "production"
+
+[context.branch-deploy.environment]
+  VITE_CONTEXT = "branch-deploy"
+
+[context.deploy-preview.environment]
+  VITE_CONTEXT = "deploy-preview"
