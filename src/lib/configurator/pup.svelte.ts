@@ -1036,8 +1036,8 @@ export class PupConfigurator {
 		requestAnimationFrame(() => this.animate());
 		if (this.controls && this.camera && this.renderer && this.scene) {
 			this.stats.begin();
-			this.renderer.render(this.scene, this.camera);
 			this.controls.update();
+			this.renderer.render(this.scene, this.camera);
 			// if (!this.shadowsLoaded) this.temporalUpdate();
 			this.stats.end();
 		}
@@ -1103,31 +1103,36 @@ export class PupConfigurator {
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
-		this.#killTweenQueue();
-
+		// this.#killTweenQueue();
 		this.controls.enabled = false;
-
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: -4,
-			y: 4,
-			z: 0,
-			ease: 'expo',
-			onComplete: () => {}
-		});
-
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: 5,
-			y: 2,
-			z: 0,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
+
+		timeline
+			.to(
+				this.camera.position,
+				{
+					x: -4,
+					y: 4,
+					z: 0
+				},
+				0
+			)
+			.to(
+				this.cameraTracker.position,
+				{
+					x: 5,
+					y: 2,
+					z: 0
+				},
+				0
+			);
 		// this.controls.target = this.cameraTracker.position;
 		// this.controls.minDistance = 6;
 		// this.controls.maxDistance = 20;
@@ -1135,35 +1140,37 @@ export class PupConfigurator {
 
 	hatchSelect() {
 		this.resetGlobalLight();
-		this.#killTweenQueue();
-
 		//close other compartments
 		this.closeAllCompartments();
-
 		this.controls.enabled = false;
-
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: this.standardCameraAngle.x,
-			y: this.standardCameraAngle.y,
-			z: this.standardCameraAngle.z,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
 
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: 0,
-			y: -1,
-			z: 0,
-			ease: 'expo'
-		});
-
-		// this.controls.target = this.cameraTracker.position;
+		timeline
+			.to(
+				this.camera.position,
+				{
+					x: this.standardCameraAngle.x,
+					y: this.standardCameraAngle.y,
+					z: this.standardCameraAngle.z
+				},
+				0
+			)
+			.to(
+				this.cameraTracker.position,
+				{
+					x: 0,
+					y: -1,
+					z: 0
+				},
+				0
+			);
 	}
 
 	// changeTargetDistance(number1: number, number2: number) {
@@ -1187,47 +1194,60 @@ export class PupConfigurator {
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 
 		this.controls!.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera!.position, {
-			duration: 2,
-			x: -7.665,
-			y: 5.15,
-			z: -7,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
-		gsap.to(this.cameraTracker!.position, { duration: 2, x: 5, y: 0, z: 0, ease: 'expo' });
-		this.controls!.target = this.cameraTracker!.position;
+
+		timeline
+			.to(
+				this.camera!.position,
+				{
+					x: -7.665,
+					y: 5.15,
+					z: -7
+				},
+				0
+			)
+			.to(this.cameraTracker!.position, { x: 5, y: 0, z: 0 }, 0);
 	}
 
 	finishSelect() {
 		//close other compartments
 		this.closeAllCompartments();
 		this.resetGlobalLight();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: this.standardCameraAngle.x,
-			y: this.standardCameraAngle.y,
-			z: this.standardCameraAngle.z,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
-		gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: -1, z: 0, ease: 'expo' });
+
+		timeline
+			.to(
+				this.camera.position,
+				{
+					x: this.standardCameraAngle.x,
+					y: this.standardCameraAngle.y,
+					z: this.standardCameraAngle.z
+				},
+				0
+			)
+			.to(this.cameraTracker.position, { duration: 2, x: 0, y: -1, z: 0 }, 0);
 		// this.controls.target = this.cameraTracker.position;
 	}
 
@@ -1237,22 +1257,29 @@ export class PupConfigurator {
 		this.closeLowSideLid();
 		this.resetGlobalLight();
 		this.presentTruckslide();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: this.standardCameraAngle.x,
-			y: this.standardCameraAngle.y,
-			z: this.standardCameraAngle.z,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
-		gsap.to(this.cameraTracker.position, { duration: 2, x: -5, y: -1, Z: 0, ease: 'expo' });
+
+		timeline
+			.to(
+				this.camera.position,
+				{
+					x: this.standardCameraAngle.x,
+					y: this.standardCameraAngle.y,
+					z: this.standardCameraAngle.z
+				},
+				0
+			)
+			.to(this.cameraTracker.position, { duration: 2, x: -5, y: -1, Z: 0 }, 0);
 		// this.controls.target = this.cameraTracker.position;
 	}
 
@@ -1273,7 +1300,7 @@ export class PupConfigurator {
 	ladderRackSelect() {
 		this.closeAllCompartments();
 		this.resetGlobalLight();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
@@ -1306,7 +1333,7 @@ export class PupConfigurator {
 		//close other compartments
 		this.closeTruckslide();
 		this.resetGlobalLight();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 
 		this.controls.enabled = false;
 
@@ -1319,10 +1346,7 @@ export class PupConfigurator {
 				x: -8,
 				y: 5,
 				z: -10,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
+				ease: 'expo'
 			});
 			gsap.to(this.cameraTracker.position, { duration: 2, x: -1.25, y: 0, z: -3, ease: 'expo' });
 		} else {
@@ -1331,12 +1355,18 @@ export class PupConfigurator {
 				x: -5,
 				y: 5,
 				z: -10,
+				ease: 'expo'
+			});
+			gsap.to(this.cameraTracker.position, {
+				duration: 2,
+				x: 0,
+				y: 0,
+				z: -3,
 				ease: 'expo',
 				onComplete: () => {
 					enableOrbitControls(id);
 				}
 			});
-			gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: 0, z: -3, ease: 'expo' });
 		}
 
 		// this.controls.target = this.cameraTracker.position;
@@ -1348,7 +1378,7 @@ export class PupConfigurator {
 	additionalLightsSelect() {
 		// close other compartments
 		this.closeTruckslide();
-		this.#killTweenQueue();
+		// this.#killTweenQueue();
 		this.controls.enabled = false;
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
