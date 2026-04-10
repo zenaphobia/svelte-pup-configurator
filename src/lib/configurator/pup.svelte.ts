@@ -1305,24 +1305,32 @@ export class PupConfigurator {
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
-		gsap.to(this.camera.position, {
-			duration: 2,
-			x: -25,
-			y: 8,
-			z: 0,
-			ease: 'expo',
-			onComplete: () => {}
-		});
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: -5,
-			y: 0,
-			z: 0,
-			ease: 'expo',
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
 			onComplete: () => {
 				enableOrbitControls(id);
 			}
 		});
+
+		timeline
+			.to(
+				this.camera.position,
+				{
+					x: -25,
+					y: 8,
+					z: 0
+				},
+				0
+			)
+			.to(
+				this.cameraTracker.position,
+				{
+					x: -5,
+					y: 0,
+					z: 0
+				},
+				0
+			);
 
 		// this.controls.minDistance = 10;
 		// this.controls.maxDistance = 30;
@@ -1339,34 +1347,46 @@ export class PupConfigurator {
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
+			onComplete: () => {
+				enableOrbitControls(id);
+			}
+		});
+
 		//dtermine if PUP Pro or Standard
 		if (this.clientPUP.gullwing === true) {
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: -8,
-				y: 5,
-				z: -10,
-				ease: 'expo'
-			});
-			gsap.to(this.cameraTracker.position, { duration: 2, x: -1.25, y: 0, z: -3, ease: 'expo' });
+			timeline
+				.to(
+					this.camera.position,
+					{
+						x: -8,
+						y: 5,
+						z: -10
+					},
+					0
+				)
+				.to(this.cameraTracker.position, { x: -1.25, y: 0, z: -3 }, 0);
 		} else {
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: -5,
-				y: 5,
-				z: -10,
-				ease: 'expo'
-			});
-			gsap.to(this.cameraTracker.position, {
-				duration: 2,
-				x: 0,
-				y: 0,
-				z: -3,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
-			});
+			timeline
+				.to(
+					this.camera.position,
+					{
+						x: -5,
+						y: 5,
+						z: -10
+					},
+					0
+				)
+				.to(
+					this.cameraTracker.position,
+					{
+						x: 0,
+						y: 0,
+						z: -3
+					},
+					0
+				);
 		}
 
 		// this.controls.target = this.cameraTracker.position;
@@ -1383,42 +1403,49 @@ export class PupConfigurator {
 
 		const [id, enableOrbitControls] = this.registerOrbitControls();
 
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' },
+			onComplete: () => {
+				enableOrbitControls(id);
+			}
+		});
+
 		if (this.clientPUP.gullwing === true) {
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: -8,
-				y: 5,
-				z: -10,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
-			});
-			gsap.to(this.cameraTracker.position, { duration: 2, x: -1.25, y: 0, z: -3, ease: 'expo' });
-			gsap.to(this.lightTracker.position, { duration: 2, x: -1.25, y: 0, z: -3, ease: 'expo' });
+			timeline
+				.to(
+					this.camera.position,
+					{
+						x: -8,
+						y: 5,
+						z: -10
+					},
+					0
+				)
+				.to(this.cameraTracker.position, { x: -1.25, y: 0, z: -3 }, 0)
+				.to(this.lightTracker.position, { x: -1.25, y: 0, z: -3 }, 0);
 			this.testLight.position.set(-1.25, 1, -2.25);
 		} else {
-			gsap.to(this.camera.position, {
-				duration: 2,
-				x: -5,
-				y: 5,
-				z: -10,
-				ease: 'expo',
-				onComplete: () => {
-					enableOrbitControls(id);
-				}
-			});
-			gsap.to(this.cameraTracker.position, { duration: 2, x: 0, y: 0, z: -3, ease: 'expo' });
-			gsap.to(this.lightTracker.position, { duration: 2, x: 0, y: 0, z: -3, ease: 'expo' });
+			timeline
+				.to(
+					this.camera.position,
+					{
+						x: -5,
+						y: 5,
+						z: -10
+					},
+					0
+				)
+				.to(this.cameraTracker.position, { x: 0, y: 0, z: -3 }, 0)
+				.to(this.lightTracker.position, { x: 0, y: 0, z: -3 }, 0);
 			this.testLight.position.set(0, 1, -2.25);
 		}
 
 		if (this.clientPUP.LED) {
-			gsap.to(this.testLight, { duration: 1, intensity: 10000, ease: 'expo' });
+			timeline.to(this.testLight, { duration: 1, intensity: 10000 }, 0);
 		}
 
 		// gsap.to(this.emissiveLight, { duration: 2, emissiveIntensity: 10000000, ease: 'expo' });
-		gsap.to(this.renderer, { duration: 1, toneMappingExposure: 0.15, ease: 'expo' });
+		timeline.to(this.renderer, { duration: 1, toneMappingExposure: 0.15 }, 0);
 
 		// this.controls.target = this.cameraTracker.position;
 
@@ -1509,8 +1536,12 @@ export class PupConfigurator {
 	}
 
 	resetGlobalLight() {
-		gsap.to(this.renderer, { duration: 2, toneMappingExposure: 1, ease: 'expo' });
-		gsap.to(this.testLight, { duration: 0.015, intensity: 0, ease: 'expo' });
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' }
+		});
+		timeline
+			.to(this.renderer, { toneMappingExposure: 1 }, 0)
+			.to(this.testLight, { duration: 0.015, intensity: 0 }, 0);
 	}
 
 	async renderGullwingTray(enable: boolean) {
@@ -1527,15 +1558,21 @@ export class PupConfigurator {
 			this.GullwingModel.getObjectByName('additional-gw-tray')!.visible = true;
 		}
 
-		gsap.to(this.cameraTracker.position, {
-			duration: 2,
-			x: loc.x,
-			y: loc.y,
-			z: loc.z,
-			ease: 'expo'
+		const timeline = gsap.timeline({
+			defaults: { duration: 2, ease: 'expo.out' }
 		});
-		gsap.to(this.camera.position, { duration: 2, x: 3.25, y: 4, z: -12, ease: 'expo' });
-		// this.controls.target = this.cameraTracker.position;
+
+		timeline
+			.to(
+				this.cameraTracker.position,
+				{
+					x: loc.x,
+					y: loc.y,
+					z: loc.z
+				},
+				0
+			)
+			.to(this.camera.position, { x: 3.25, y: 4, z: -12 }, 0);
 	}
 
 	renderLowSideTrays(amount: number) {
