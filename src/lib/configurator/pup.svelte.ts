@@ -2368,21 +2368,24 @@ export class PupConfigurator {
 			gsap.to(this.ShortFlatHatch.getObjectByName('Decimated_Hatch')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-15 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
 		gsap.to(this.LongFlatHatch.getObjectByName('long_flat_hatch')!.rotation, {
 			duration: 2,
 			y: 2 * Math.PI * (-10 / 360),
-			ease: 'expo'
+			ease: 'expo',
+			overwrite: 'auto'
 		});
 
 		if (this.LongDomedHatch) {
 			gsap.to(this.LongDomedHatch.getObjectByName('Shape_IndexedFaceSet012')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-10 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2390,7 +2393,8 @@ export class PupConfigurator {
 			gsap.to(this.ShortDomedHatch.getObjectByName('Shape_IndexedFaceSet028')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-15 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2398,7 +2402,8 @@ export class PupConfigurator {
 			gsap.to(this.shortGladiatorFH.getObjectByName('short-hatch-gladiator')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-15 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2406,7 +2411,8 @@ export class PupConfigurator {
 			gsap.to(this.longGladiatorFH.getObjectByName('gladiator-long-hatch')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-10 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2414,7 +2420,8 @@ export class PupConfigurator {
 			gsap.to(this.longGladiatorDH.getObjectByName('gladiator-long-dome-hatch')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-10 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2422,7 +2429,8 @@ export class PupConfigurator {
 			gsap.to(this.shortGladiatorDH.getObjectByName('gladiator-short-domed-hatch')!.rotation, {
 				duration: 2,
 				z: 2 * Math.PI * (-15 / 360),
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2431,7 +2439,8 @@ export class PupConfigurator {
 			duration: 2,
 			x: 2 * Math.PI * (-90 / 360),
 			ease: 'expo',
-			delay: 0.5
+			delay: 0.5,
+			overwrite: 'auto'
 		});
 
 		//open truckslide
@@ -2441,7 +2450,8 @@ export class PupConfigurator {
 					duration: 2,
 					x: -11,
 					ease: 'expo',
-					delay: 1
+					delay: 1,
+					overwrite: 'auto'
 				})
 			);
 		}
@@ -2452,7 +2462,8 @@ export class PupConfigurator {
 					duration: 2,
 					x: -11,
 					ease: 'expo',
-					delay: 1
+					delay: 1,
+					overwrite: 'auto'
 				})
 			);
 		}
@@ -2463,7 +2474,8 @@ export class PupConfigurator {
 					duration: 2,
 					x: -11,
 					ease: 'expo',
-					delay: 1
+					delay: 1,
+					overwrite: 'auto'
 				})
 			);
 		}
@@ -2476,7 +2488,8 @@ export class PupConfigurator {
 			gsap.to(this.XTBase.getObjectByName('truckslide_movingBase')!.position, {
 				duration: 2,
 				x: -4.65,
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2484,7 +2497,8 @@ export class PupConfigurator {
 			gsap.to(this.XT1200Truckslide.getObjectByName('Truckslide_XT1200')!.position, {
 				duration: 2,
 				x: -4.65,
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2492,7 +2506,8 @@ export class PupConfigurator {
 			gsap.to(this.XT2000Truckslide.getObjectByName('Truckslide_XT2000')!.position, {
 				duration: 2,
 				x: -4.65,
-				ease: 'expo'
+				ease: 'expo',
+				overwrite: 'auto'
 			});
 		}
 
@@ -2501,7 +2516,8 @@ export class PupConfigurator {
 			duration: 2,
 			x: 2 * Math.PI * (0 / 360),
 			ease: 'expo',
-			delay: 0.5
+			delay: 0.5,
+			overwrite: 'auto'
 		});
 
 		if (this.ShortFlatHatch) {
@@ -2509,7 +2525,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2518,7 +2534,7 @@ export class PupConfigurator {
 			duration: 2,
 			y: 2 * Math.PI * (0 / 360),
 			ease: 'expo',
-			delay: 1
+			overwrite: 'auto'
 		});
 
 		if (this.LongDomedHatch) {
@@ -2526,7 +2542,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2535,7 +2551,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2544,7 +2560,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2553,7 +2569,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2562,7 +2578,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 
@@ -2571,7 +2587,7 @@ export class PupConfigurator {
 				duration: 2,
 				z: 2 * Math.PI * (0 / 360),
 				ease: 'expo',
-				delay: 1
+				overwrite: 'auto'
 			});
 		}
 	}
