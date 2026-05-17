@@ -7,6 +7,9 @@
 	import { selectedItemContext } from '$lib/stores.svelte';
 	import { fade, fly } from 'svelte/transition';
 	import DataLoader from '$lib/components/DataLoader.svelte';
+	import { page } from '$app/state';
+
+	let demoMode = page.url.searchParams.get('demo');
 
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let configurator: PupConfigurator | undefined = $state();
@@ -40,7 +43,7 @@
 
 <main class="w-full h-full overflow-hidden">
 	<canvas bind:this={canvas} id="myCanvas" class="block"></canvas>
-	{#if configurator}
+	{#if configurator && !demoMode}
 		<Sidebar {configurator} />
 		{#key selectedItemContext.context?.name}
 			<SelectedItem {configurator} />
